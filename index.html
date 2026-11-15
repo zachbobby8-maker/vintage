@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1A1715" />
+  <title>BraidVintage — Vintage Couture, Sealed Beauty & Merchant Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Announcement bar -->
+  <div class="announce">
+    <div class="container announce-inner">
+      <p class="announce-drop">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <span data-i18n="announce.drop">Friday Archive Drop — next 1-of-1 release in</span>
+        <strong id="drop-countdown" class="gold tabular">--</strong>
+      </p>
+      <p id="announce-ship" class="announce-ship"></p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-row">
+        <button id="brand-home" class="brand" type="button">
+          <span class="brand-word">BRAIDVINTAGE<span class="gold">.COM</span></span>
+          <span class="brand-sub" data-i18n="brand.tagline">Archive Couture · Sealed Vanity</span>
+        </button>
+
+        <nav class="nav" data-i18n-aria-label="nav.label" aria-label="Categories">
+          <button class="nav-btn is-active" type="button" data-cat="all" data-i18n="cat.all">All Pieces</button>
+          <button class="nav-btn" type="button" data-cat="couture" data-i18n="cat.couture">Vintage Couture</button>
+          <button class="nav-btn" type="button" data-cat="bags" data-i18n="cat.bags">Bags & Leather</button>
+          <button class="nav-btn" type="button" data-cat="watches" data-i18n="cat.watches">Vintage Watches</button>
+          <button class="nav-btn" type="button" data-cat="beauty" data-i18n="cat.beauty">Sealed Beauty</button>
+          <button class="nav-btn" type="button" data-cat="vanity" data-i18n="cat.vanity">Vanity & Hair</button>
+          <button class="nav-btn" type="button" data-cat="wigs" data-i18n="cat.wigs">Wigs & Hair Units</button>
+        </nav>
+
+        <div class="header-actions">
+          <div class="seg" role="group" data-i18n-aria-label="currency.label" aria-label="Currency">
+            <button id="btn-usd" class="seg-btn is-active" type="button" aria-pressed="true">USD</button>
+            <button id="btn-ngn" class="seg-btn" type="button" aria-pressed="false">NGN</button>
+          </div>
+          <button id="btn-sell" class="icon-btn icon-btn-gold desk-only" type="button" data-i18n-aria-label="header.sellAria" aria-label="Open your own store">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v1a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0V9M5 13v7h14v-7"/></svg>
+            <span class="icon-btn-label" data-i18n="header.sell">Sell</span>
+          </button>
+          <button id="btn-orders" class="icon-btn desk-only" type="button" data-i18n-aria-label="header.ordersAria" aria-label="Orders and messages">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>
+            <span class="icon-btn-label" data-i18n="header.orders">Orders</span>
+            <span id="orders-badge" class="count-badge count-rose" hidden></span>
+          </button>
+          <button id="btn-admin" class="icon-btn desk-only" type="button" data-i18n-aria-label="header.adminAria" aria-label="Merchant admin">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <span class="icon-btn-label" data-i18n="header.admin">Admin</span>
+          </button>
+          <button id="btn-bag" class="btn btn-primary btn-bag" type="button" data-i18n-aria-label="header.bagAria" aria-label="Open bag">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5M5.5 7.5h13l1.3 13.2a1 1 0 0 1-1 1.1H5.2a1 1 0 0 1-1-1.1Z"/></svg>
+            <span class="hide-sm" data-i18n="header.bag">Bag</span>
+            <span id="cart-count" class="count-badge">0</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="nav-mobile" data-i18n-aria-label="nav.label" aria-label="Categories">
+        <button class="nav-btn is-active" type="button" data-cat="all" data-i18n="cat.all">All Pieces</button>
+        <button class="nav-btn" type="button" data-cat="couture" data-i18n="cat.couture">Vintage Couture</button>
+        <button class="nav-btn" type="button" data-cat="bags" data-i18n="cat.bags">Bags & Leather</button>
+        <button class="nav-btn" type="button" data-cat="watches" data-i18n="cat.watches">Vintage Watches</button>
+        <button class="nav-btn" type="button" data-cat="beauty" data-i18n="cat.beauty">Sealed Beauty</button>
+        <button class="nav-btn" type="button" data-cat="vanity" data-i18n="cat.vanity">Vanity & Hair</button>
+        <button class="nav-btn" type="button" data-cat="wigs" data-i18n="cat.wigs">Wigs & Hair Units</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="chip"><span class="dot dot-rose" aria-hidden="true"></span><span data-i18n="hero.chip">Autumn / Winter Archive Drop · Edition 04</span></span>
+        <h1 class="display hero-title">
+          <span data-i18n="hero.title1">Heirloom 90s couture &</span>
+          <em class="rose" data-i18n="hero.title2">velvet vanity</em>
+          <span data-i18n="hero.title3">rituals.</span>
+        </h1>
+        <p class="lead" data-i18n="hero.lead">Hand-sourced 1-of-1 designer pieces from Milan and Paris, paired with factory-sealed beauty and gold-plated hair accessories.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" type="button" data-jump="all" data-i18n="hero.ctaShop">Shop the archive drop</button>
+          <button class="btn btn-outline btn-lg" type="button" data-jump="beauty" data-i18n="hero.ctaBeauty">Explore sealed beauty</button>
+        </div>
+        <div class="pillars">
+          <div><p class="pillar-title" data-i18n="pillar.1.title">1-of-1 Verified</p><p class="pillar-text" data-i18n="pillar.1.text">Measured & authenticated garments</p></div>
+          <div><p class="pillar-title" data-i18n="pillar.2.title">100% Sealed</p><p class="pillar-text" data-i18n="pillar.2.text">Factory-fresh cosmetics & kits</p></div>
+          <div><p class="pillar-title" data-i18n="pillar.3.title">Chat the merchant</p><p class="pillar-text" data-i18n="pillar.3.text">Message us about any order</p></div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <figure class="hero-main">
+          <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=80" data-fallback="https://placehold.co/600x800/F3EDE3/1A1715?text=Archive+Couture" alt="" data-i18n-alt="hero.img1Alt" />
+          <figcaption>
+            <span class="cap-eyebrow" data-i18n="hero.cap1Eyebrow">Lot #01 · 1 of 1 archive</span>
+            <span class="cap-title" data-i18n="hero.cap1Title">1994 Milan silk bias slip dress</span>
+          </figcaption>
+        </figure>
+        <div class="hero-side">
+          <figure class="hero-sq">
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=80" data-fallback="https://placehold.co/500x500/9E5A5A/FAF7F2?text=Lip+Trio" alt="" data-i18n-alt="hero.img2Alt" />
+            <figcaption>
+              <span class="cap-eyebrow" data-i18n="hero.cap2Eyebrow">Factory sealed</span>
+              <span class="cap-title cap-sm" data-i18n="hero.cap2Title">Crushed-berry lip trio</span>
+            </figcaption>
+          </figure>
+          <div class="note-card">
+            <p class="cap-eyebrow" data-i18n="hero.noteEyebrow">Curator's styling note</p>
+            <p class="note-quote" data-i18n="hero.noteQuote">"Pair structured 80s tailoring with high-shine berry lip oil and tortoise hair pins."</p>
+            <button class="btn btn-gold btn-sm btn-block js-add-bundle" type="button"><span data-i18n="bundle.addKit">Add vanity ritual kit</span> · <span class="bundle-price"></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalog -->
+  <main id="catalog" class="container section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow eyebrow-rose" data-i18n="catalog.eyebrow">The weekly vault</p>
+        <h2 id="catalog-heading" class="display h2"></h2>
+      </div>
+      <div class="pills">
+        <button class="pill is-active" type="button" data-cat="all" aria-pressed="true"><span data-i18n="cat.all">All Pieces</span> <span class="pill-count" data-count="all"></span></button>
+        <button class="pill" type="button" data-cat="couture" aria-pressed="false"><span data-i18n="cat.couture">Vintage Couture</span> <span class="pill-count" data-count="couture"></span></button>
+        <button class="pill" type="button" data-cat="bags" aria-pressed="false"><span data-i18n="cat.bags">Bags & Leather</span> <span class="pill-count" data-count="bags"></span></button>
+        <button class="pill" type="button" data-cat="watches" aria-pressed="false"><span data-i18n="cat.watches">Vintage Watches</span> <span class="pill-count" data-count="watches"></span></button>
+        <button class="pill" type="button" data-cat="beauty" aria-pressed="false"><span data-i18n="cat.beauty">Sealed Beauty</span> <span class="pill-count" data-count="beauty"></span></button>
+        <button class="pill" type="button" data-cat="vanity" aria-pressed="false"><span data-i18n="cat.vanity">Vanity & Hair</span> <span class="pill-count" data-count="vanity"></span></button>
+        <button class="pill" type="button" data-cat="wigs" aria-pressed="false"><span data-i18n="cat.wigs">Wigs & Hair Units</span> <span class="pill-count" data-count="wigs"></span></button>
+        <button class="pill" type="button" data-cat="partners" aria-pressed="false"><span data-i18n="cat.partners">Partner Stores</span> <span class="pill-count" data-count="partners"></span></button>
+      </div>
+    </div>
+
+    <div id="product-grid" class="product-grid"></div>
+    <p id="grid-empty" class="empty-state" hidden data-i18n="catalog.empty">Nothing in this category right now.</p>
+
+    <section class="bundle" aria-labelledby="bundle-title">
+      <div class="bundle-copy">
+        <span class="chip chip-rose" data-i18n="bundle.chip">Signature vanity edit · Save 35%</span>
+        <h3 id="bundle-title" class="display h3" data-i18n="bundle.title">The 90s supermodel "Complete the Look" edit</h3>
+        <p class="muted" data-i18n="bundle.text">Finish any archive piece with our sealed set: velvet crushed-berry lip oil, gold-plated tortoise claw clip and a silk satin bonnet.</p>
+        <div class="row">
+          <button class="btn btn-primary js-add-bundle" type="button"><span data-i18n="bundle.addFull">Add the vanity bundle</span> · <span class="bundle-price"></span></button>
+          <span id="bundle-compare" class="strike"></span>
+        </div>
+      </div>
+      <div class="bundle-imgs">
+        <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&q=80" data-fallback="https://placehold.co/300x300/FAF7F2/1A1715?text=Lip+Oil" alt="" data-i18n-alt="bundle.img1" />
+        <img src="https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&q=80" data-fallback="https://placehold.co/300x300/FAF7F2/1A1715?text=Gold+Clip" alt="" data-i18n-alt="bundle.img2" />
+        <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=400&q=80" data-fallback="https://placehold.co/300x300/FAF7F2/1A1715?text=Silk+Bonnet" alt="" data-i18n-alt="bundle.img3" />
+      </div>
+    </section>
+
+    <section id="brands" class="brands" aria-labelledby="brands-title">
+      <div class="brands-head">
+        <p class="eyebrow" data-i18n="brands.eyebrow">Brands we stock</p>
+        <h2 id="brands-title" class="display h3" data-i18n="brands.title">Authentic beauty & hair brands</h2>
+        <p class="muted small" data-i18n="brands.text">Every product is bought from the brand or its official distributor and arrives factory sealed.</p>
+      </div>
+      <div class="brands-grid">
+        <div class="brand-col">
+          <div class="row-between">
+            <h3 class="brand-col-title" data-i18n="brands.beauty">Beauty & makeup</h3>
+            <button class="link-btn small" type="button" data-jump="beauty" data-i18n="brands.shopBeauty">Shop beauty</button>
+          </div>
+          <ul id="brands-beauty" class="brand-list"></ul>
+        </div>
+        <div class="brand-col">
+          <div class="row-between">
+            <h3 class="brand-col-title" data-i18n="brands.hair">Hair care, braids & wigs</h3>
+            <button class="link-btn small" type="button" data-jump="wigs" data-i18n="brands.shopWigs">Shop wigs</button>
+          </div>
+          <ul id="brands-hair" class="brand-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="watches" class="watch-band" aria-labelledby="watch-title">
+      <img class="watch-band-img" src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=800&q=80" data-fallback="https://placehold.co/600x600/1A1715/C5A059?text=Vintage+Watch" alt="" data-i18n-alt="watch.imgAlt" />
+      <div class="watch-band-copy">
+        <p class="eyebrow gold" data-i18n="watch.eyebrow">We buy & sell women's watches</p>
+        <h2 id="watch-title" class="display h3" data-i18n="watch.title">Vintage ladies' watches, hand-checked.</h2>
+        <p class="small" data-i18n="watch.text">Cartier, Omega, Gucci, Seiko and more — serviced, authenticated and ready to wear. Have a women's watch to sell? Send us photos and we'll make you an offer within 24 hours.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-gold" type="button" data-jump="watches" data-i18n="watch.shop">Shop vintage watches</button>
+          <button id="watch-sell" class="btn btn-ghost-light" type="button" data-i18n="watch.sell">Sell us your watch</button>
+        </div>
+        <p id="watch-sell-note" class="small" role="status" hidden data-i18n="watch.noContact">Message us from Orders & chat — we'll reply with an offer.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Model casting -->
+  <section id="casting" class="casting" aria-labelledby="casting-title">
+    <div class="container casting-grid">
+      <div class="casting-media">
+        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80" data-fallback="https://placehold.co/600x750/9E5A5A/FAF7F2?text=Now+Casting" alt="" data-i18n-alt="casting.imgAlt" loading="lazy" />
+        <span class="casting-badge" data-i18n="casting.badge">Now casting</span>
+      </div>
+      <div class="casting-copy">
+        <p class="eyebrow eyebrow-rose" data-i18n="casting.eyebrow">Model call · Edition 05 campaign</p>
+        <h2 id="casting-title" class="display h2"><span data-i18n="casting.title1">Braid Vintage is</span> <em class="rose" data-i18n="casting.title2">looking for models.</em></h2>
+        <p class="muted" data-i18n="casting.lead">We're casting fresh faces for our next lookbook, wig campaign and runway shows in Lagos. Female and male models aged 18 to 22 — no experience needed. Message the admin to apply.</p>
+        <ul class="casting-facts">
+          <li><span class="casting-num">18–22</span><span class="small" data-i18n="casting.factAge">Age range</span></li>
+          <li><span class="casting-num">F / M</span><span class="small" data-i18n="casting.factGender">Female & male</span></li>
+          <li><span class="casting-num">0</span><span class="small" data-i18n="casting.factExp">Experience needed</span></li>
+        </ul>
+        <div class="row">
+          <button id="casting-apply" class="btn btn-primary btn-lg" type="button" data-i18n="casting.cta">Apply — message the admin</button>
+          <a id="casting-wa" class="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer" hidden><span data-i18n="casting.wa">Apply on WhatsApp</span></a>
+        </div>
+        <p id="casting-mine" class="small casting-mine" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Own a store -->
+  <section id="sell" class="sell" aria-labelledby="sell-title">
+    <div class="container sell-grid">
+      <div class="sell-copy">
+        <p class="eyebrow gold" data-i18n="sell.eyebrow">Own a store with Braid</p>
+        <h2 id="sell-title" class="display h2">
+          <span data-i18n="sell.title1">Own a store.</span>
+          <em class="gold" data-i18n="sell.title2">Sell your accessories with Braid.</em>
+        </h2>
+        <p class="sell-lead" data-i18n="sell.lead">Hair jewellery, beads, wraps, bags or sealed beauty — open your partner store in minutes. We handle checkout, payments and buyer chat. You focus on making beautiful things.</p>
+        <ul class="perks">
+          <li><span class="perk-num">0</span><span><strong data-i18n="sell.perk1Title">No setup fee</strong><span class="block small" data-i18n="sell.perk1Text">Apply free, list up to 4 pieces to start.</span></span></li>
+          <li><span class="perk-num">88%</span><span><strong data-i18n="sell.perk2Title">You keep 88%</strong><span class="block small" data-i18n="sell.perk2Text">Braid takes 12% only when you sell.</span></span></li>
+          <li><span class="perk-num">₦/$</span><span><strong data-i18n="sell.perk3Title">Paid your way</strong><span class="block small" data-i18n="sell.perk3Text">Payouts in NGN, USD or $BRAID.</span></span></li>
+          <li><span class="perk-num">48h</span><span><strong data-i18n="sell.perk4Title">Fast review</strong><span class="block small" data-i18n="sell.perk4Text">Our curators reply within two days.</span></span></li>
+        </ul>
+        <div class="row">
+          <button id="sell-open" class="btn btn-gold btn-lg" type="button" data-i18n="sell.cta">Open your store</button>
+          <button id="sell-status-btn" class="btn btn-ghost-light btn-lg" type="button" hidden data-i18n="sell.checkStatus">Check my application</button>
+        </div>
+      </div>
+      <div id="sell-stores-wrap" class="sell-stores-wrap">
+        <p class="eyebrow gold" data-i18n="sell.liveStores">Partner stores live now</p>
+        <div id="sell-stores" class="sell-stores"></div>
+        <button class="btn btn-ghost-light btn-sm" type="button" data-jump="partners" data-i18n="sell.shopPartners">Shop partner stores</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <p class="brand-word">BRAIDVINTAGE<span class="gold">.COM</span></p>
+        <p class="footer-text" data-i18n="footer.about2">Curated 1-of-1 archive couture, heirloom leather goods and factory-sealed beauty. Head store in Victoria Island, Lagos, with stores in Nairobi, Johannesburg and Accra.</p>
+      </div>
+      <div>
+        <h4 class="footer-h" data-i18n="footer.collections">Collections</h4>
+        <ul class="footer-list">
+          <li><button class="link-btn" type="button" data-jump="couture" data-i18n="cat.couture">Vintage Couture</button></li>
+          <li><button class="link-btn" type="button" data-jump="bags" data-i18n="cat.bags">Bags & Leather</button></li>
+          <li><button class="link-btn" type="button" data-jump="watches" data-i18n="cat.watches">Vintage Watches</button></li>
+          <li><button class="link-btn" type="button" data-jump="beauty" data-i18n="cat.beauty">Sealed Beauty</button></li>
+          <li><button class="link-btn" type="button" data-jump="vanity" data-i18n="cat.vanity">Vanity & Hair</button></li>
+          <li><button id="footer-sell" class="link-btn" type="button" data-i18n="footer.sell">Sell with Braid</button></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-h" data-i18n="footer.concierge">Client concierge</h4>
+        <ul class="footer-list">
+          <li><button id="footer-chat" class="link-btn" type="button" data-i18n="footer.chat">Message the merchant</button></li>
+          <li><a class="link-btn" href="#stores" data-i18n="footer.stores">Find a store</a></li>
+          <li data-i18n="footer.k2">Hygiene seal guarantee</li>
+          <li data-i18n="footer.k3">Paystack NGN · Apple Pay · Cards</li>
+          <li data-i18n="footer.k4">$BRAID wallet settlement</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom"><p data-i18n="footer.copy">© 2026 BraidVintage.com. All rights reserved.</p></div>
+  </footer>
+
+  <!-- Quick view -->
+  <dialog id="qv-dialog" class="modal modal-wide" aria-labelledby="qv-name">
+    <div class="modal-card qv">
+      <button class="close-btn close-float" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="qv-media">
+        <div class="qv-main-img"><img id="qv-img" alt="" /></div>
+        <div id="qv-thumbs" class="qv-thumbs" hidden></div>
+      </div>
+      <div class="qv-body">
+        <div class="row"><span id="qv-badge" class="tag"></span><span id="qv-stock" class="tag tag-outline" hidden></span></div>
+        <p id="qv-era" class="eyebrow"></p>
+        <h3 id="qv-name" class="display h3"></h3>
+        <p class="row"><span id="qv-price" class="price-lg rose"></span><span id="qv-compare" class="strike" hidden></span></p>
+        <p id="qv-desc" class="qv-desc" hidden></p>
+        <ul id="qv-highlights" class="qv-highlights" hidden></ul>
+        <div id="qv-shade-wrap" class="field" hidden>
+          <label for="qv-shade" data-i18n="qv.shade">Shade / variant</label>
+          <select id="qv-shade" class="input"></select>
+        </div>
+        <label class="check-card">
+          <input type="checkbox" id="qv-bundle" checked />
+          <span>
+            <strong><span data-i18n="qv.bundleTitle">Complete the look</span> (+<span class="bundle-price"></span>)</strong>
+            <span class="small muted block" data-i18n="qv.bundleText">Add the velvet lip oil & gold tortoise claw clip set. Save 35%.</span>
+          </span>
+        </label>
+        <button id="qv-add" class="btn btn-primary btn-lg btn-block" type="button"></button>
+        <div class="qv-details">
+          <details open>
+            <summary data-i18n="qv.secMeasure">Measurements & fit</summary>
+            <p id="qv-measure"></p>
+            <p id="qv-fit" class="muted" hidden></p>
+          </details>
+          <details id="qv-sec-materials">
+            <summary data-i18n="qv.secMaterials">Materials & composition</summary>
+            <p id="qv-materials"></p>
+          </details>
+          <details id="qv-sec-condition">
+            <summary data-i18n="qv.condition">Curator condition</summary>
+            <p id="qv-condition"></p>
+          </details>
+          <details id="qv-sec-care">
+            <summary data-i18n="qv.secCare">Care guide</summary>
+            <p id="qv-care"></p>
+          </details>
+          <details id="qv-sec-prov">
+            <summary data-i18n="qv.secProvenance">Provenance & authenticity</summary>
+            <p id="qv-provenance"></p>
+          </details>
+          <details>
+            <summary data-i18n="qv.secShipping">Shipping & returns</summary>
+            <ul id="qv-ship-list" class="qv-highlights"></ul>
+            <p class="muted" data-i18n="qv.returns">1-of-1 archive pieces are final sale. Sealed beauty can be returned unopened within 14 days. Message us from your order for help.</p>
+          </details>
+        </div>
+        <p id="qv-sku" class="small muted" hidden></p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Cart drawer -->
+  <dialog id="cart-dialog" class="drawer" aria-labelledby="cart-title">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <div>
+          <h3 id="cart-title" class="display h4" data-i18n="cart.title">Your archive bag</h3>
+          <p class="small muted" data-i18n="cart.hold">1-of-1 pieces are held for 15 minutes</p>
+        </div>
+        <button class="close-btn" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="ship-progress">
+        <div class="row-between"><span id="ship-progress-text"></span><span id="ship-progress-pct" class="gold"></span></div>
+        <div class="bar"><div id="ship-progress-bar" class="bar-fill"></div></div>
+      </div>
+      <div class="drawer-body">
+        <div id="cart-items" class="cart-items"></div>
+        <div id="cart-empty" class="empty-state" hidden>
+          <p class="display h4" data-i18n="cart.emptyTitle">Your bag is empty</p>
+          <p class="small muted" data-i18n="cart.emptyText">Explore 1-of-1 silk dresses, vintage leather and sealed beauty essentials.</p>
+          <button id="cart-browse" class="btn btn-outline" type="button" data-i18n="cart.browse">Browse the vault</button>
+        </div>
+      </div>
+      <div class="upsell">
+        <div>
+          <p class="eyebrow eyebrow-rose" data-i18n="upsell.eyebrow">Complete the look</p>
+          <p class="upsell-title" data-i18n="upsell.title">Velvet lip oil & gold claw kit</p>
+          <p class="small muted"><span data-i18n="upsell.text">Sealed add-on</span> · <span class="bundle-price"></span></p>
+        </div>
+        <button class="btn btn-primary btn-sm js-add-bundle" type="button" data-i18n="upsell.add">+ Add</button>
+      </div>
+      <div class="drawer-foot">
+        <div class="row-between"><span class="muted" data-i18n="cart.subtotal">Subtotal</span><span id="cart-subtotal" class="price-lg"></span></div>
+        <button id="btn-checkout" class="btn btn-primary btn-lg btn-block" type="button" data-i18n="cart.checkout">Proceed to checkout</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Checkout dialog and the "Our stores" section live in partials/*.js -->
+
+  <!-- Buyer orders & chat -->
+  <dialog id="orders-dialog" class="modal" aria-labelledby="orders-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow eyebrow-rose" data-i18n="orders.eyebrow">Client concierge</p>
+          <h3 id="orders-title" class="display h3" data-i18n="orders.title">Your orders & messages</h3>
+        </div>
+        <button class="close-btn" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="orders-list-view">
+          <p class="small muted" data-i18n="orders.hint">Tap an order to see its shipping status and message the merchant.</p>
+          <div id="orders-list" class="order-list"></div>
+          <div id="orders-empty" class="empty-state" hidden>
+            <p class="display h4" data-i18n="orders.emptyTitle">No orders yet</p>
+            <p class="small muted" data-i18n="orders.emptyText">Once you place an order you can chat with the merchant about it here.</p>
+          </div>
+        </div>
+        <div id="order-detail" hidden>
+          <button id="od-back" class="link-btn back-link" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+            <span data-i18n="common.allOrders">All orders</span>
+          </button>
+          <div class="od-head">
+            <div><p id="od-date" class="eyebrow"></p><h4 id="od-id" class="display h4"></h4></div>
+            <span id="od-status" class="status-chip"></span>
+          </div>
+          <div id="od-items" class="mini-items"></div>
+          <div class="panel">
+            <p class="eyebrow" data-i18n="od.shipTo">Shipping to</p>
+            <p id="od-ship" class="small"></p>
+            <p id="od-method" class="small muted"></p>
+            <p id="od-tracking" class="small strong" hidden></p>
+          </div>
+          <div class="chat">
+            <p class="eyebrow" data-i18n="chat.title">Messages with the merchant</p>
+            <div id="od-chat-log" class="chat-log" aria-live="polite"></div>
+            <form id="od-chat-form" class="chat-form">
+              <label for="od-chat-input" class="sr-only" data-i18n="chat.label">Message</label>
+              <input id="od-chat-input" class="input" autocomplete="off" maxlength="600" data-i18n-placeholder="chat.placeholder" placeholder="Ask about sizing, delivery, changes…" />
+              <button class="btn btn-primary" type="submit" data-i18n="chat.send">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Seller application, admin login, product editor and casting dialogs live in partials/*.js -->
+
+  <!-- Admin console -->
+  <dialog id="admin-dialog" class="modal modal-full" aria-labelledby="admin-title">
+    <div class="modal-card admin">
+      <div class="modal-head dark">
+        <div>
+          <p class="eyebrow gold" data-i18n="admin.eyebrow">Merchant console</p>
+          <h3 id="admin-title" class="display h3" data-i18n="admin.title">Orders, chat & shipping</h3>
+        </div>
+        <div class="row">
+          <button id="admin-logout" class="btn btn-ghost-light btn-sm" type="button" data-i18n="admin.logout">Log out</button>
+          <button class="close-btn close-btn-dark" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab is-active" type="button" role="tab" data-tab="orders" aria-selected="true"><span data-i18n="admin.tabOrders">Orders & chat</span> <span id="admin-unread" class="count-badge count-rose" hidden></span></button>
+        <button class="tab" type="button" role="tab" data-tab="products" aria-selected="false" data-i18n="admin.tabProducts">Products</button>
+        <button class="tab" type="button" role="tab" data-tab="sellers" aria-selected="false"><span data-i18n="admin.tabSellers">Sellers</span> <span id="admin-sellers-count" class="count-badge count-rose" hidden></span></button>
+        <button class="tab" type="button" role="tab" data-tab="shipping" aria-selected="false" data-i18n="admin.tabShipping">Shipping settings</button>
+        <button class="tab" type="button" role="tab" data-tab="overview" aria-selected="false" data-i18n="admin.tabOverview">Overview</button>
+      </div>
+      <div class="modal-body">
+        <section id="admin-tab-orders" class="tab-panel">
+          <div id="ao-list-view">
+            <div class="row-between">
+              <p class="small muted" data-i18n="admin.ordersHint">Open an order to reply to the buyer or change shipping details.</p>
+              <label for="ao-filter" class="sr-only" data-i18n="admin.filter">Filter by status</label>
+              <select id="ao-filter" class="input input-sm">
+                <option value="all" data-i18n="admin.filterAll">All orders</option>
+                <option value="placed" data-i18n="status.placed">Placed</option>
+                <option value="processing" data-i18n="status.processing">Processing</option>
+                <option value="shipped" data-i18n="status.shipped">Shipped</option>
+                <option value="delivered" data-i18n="status.delivered">Delivered</option>
+                <option value="cancelled" data-i18n="status.cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div id="ao-list" class="order-list"></div>
+            <div id="ao-empty" class="empty-state" hidden><p class="muted" data-i18n="admin.noOrders">No orders match this filter.</p></div>
+          </div>
+          <div id="ao-detail" hidden>
+            <button id="ao-back" class="link-btn back-link" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+              <span data-i18n="common.allOrders">All orders</span>
+            </button>
+            <div class="od-head">
+              <div><p id="ao-date" class="eyebrow"></p><h4 id="ao-id" class="display h4"></h4><p id="ao-customer" class="small muted"></p></div>
+              <span id="ao-status-chip" class="status-chip"></span>
+            </div>
+            <div class="admin-cols">
+              <div class="stack">
+                <div id="ao-items" class="mini-items"></div>
+                <p id="ao-total" class="small strong"></p>
+                <p id="ao-buyer-note" class="hint" hidden></p>
+                <form id="ao-ship-form" class="panel stack" novalidate>
+                  <p class="eyebrow" data-i18n="admin.editShipping">Edit shipping details</p>
+                  <div class="form-grid">
+                    <div class="field span-2"><label for="ao-status" data-i18n="admin.status">Order status</label>
+                      <select id="ao-status" class="input">
+                        <option value="placed" data-i18n="status.placed">Placed</option>
+                        <option value="processing" data-i18n="status.processing">Processing</option>
+                        <option value="shipped" data-i18n="status.shipped">Shipped</option>
+                        <option value="delivered" data-i18n="status.delivered">Delivered</option>
+                        <option value="cancelled" data-i18n="status.cancelled">Cancelled</option>
+                      </select>
+                    </div>
+                    <div class="field"><label for="ao-name" data-i18n="field.name">Full name</label><input id="ao-name" class="input" /></div>
+                    <div class="field"><label for="ao-phone" data-i18n="field.phone">Phone / WhatsApp</label><input id="ao-phone" type="tel" class="input" /></div>
+                    <div class="field span-2"><label for="ao-address" data-i18n="field.address">Street address</label><input id="ao-address" class="input" /></div>
+                    <div class="field"><label for="ao-city" data-i18n="field.city">City</label><input id="ao-city" class="input" /></div>
+                    <div class="field"><label for="ao-country" data-i18n="field.country">Country</label><input id="ao-country" class="input" /></div>
+                    <div class="field span-2"><label for="ao-method" data-i18n="chk.method">Shipping method</label><select id="ao-method" class="input"></select></div>
+                    <div class="field"><label for="ao-carrier" data-i18n="admin.carrier">Carrier</label><input id="ao-carrier" class="input" data-i18n-placeholder="admin.carrierPh" placeholder="DHL Express" /></div>
+                    <div class="field"><label for="ao-tracking" data-i18n="admin.tracking">Tracking number</label><input id="ao-tracking" class="input" data-i18n-placeholder="admin.trackingPh" placeholder="JD0146000034" /></div>
+                  </div>
+                  <label class="check-row"><input type="checkbox" id="ao-notify" checked /><span data-i18n="admin.notify">Message the buyer about this update</span></label>
+                  <button class="btn btn-primary btn-block" type="submit" data-i18n="admin.saveShipping">Save shipping details</button>
+                </form>
+              </div>
+              <div class="chat panel">
+                <p class="eyebrow" data-i18n="chat.withBuyer">Chat with the buyer</p>
+                <div id="ao-chat-log" class="chat-log" aria-live="polite"></div>
+                <form id="ao-chat-form" class="chat-form">
+                  <label for="ao-chat-input" class="sr-only" data-i18n="chat.label">Message</label>
+                  <input id="ao-chat-input" class="input" autocomplete="off" maxlength="600" data-i18n-placeholder="chat.adminPlaceholder" placeholder="Reply to the buyer…" />
+                  <button class="btn btn-primary" type="submit" data-i18n="chat.send">Send</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="admin-tab-products" class="tab-panel" hidden>
+          <div class="row-between">
+            <p id="ap-count" class="small muted"></p>
+            <button id="ap-add" class="btn btn-gold btn-sm" type="button" data-i18n="ap.add">+ Add product</button>
+          </div>
+          <div class="ap-tools">
+            <label for="ap-search" class="sr-only" data-i18n="ap.search">Search products</label>
+            <input id="ap-search" type="search" class="input" data-i18n-placeholder="ap.searchPh" placeholder="Search by name or SKU" />
+            <label for="ap-filter" class="sr-only" data-i18n="ap.filter">Filter by category</label>
+            <select id="ap-filter" class="input">
+              <option value="all" data-i18n="cat.all">All Pieces</option>
+              <option value="couture" data-i18n="cat.couture">Vintage Couture</option>
+              <option value="bags" data-i18n="cat.bags">Bags & Leather</option>
+              <option value="watches" data-i18n="cat.watches">Vintage Watches</option>
+              <option value="beauty" data-i18n="cat.beauty">Sealed Beauty</option>
+              <option value="vanity" data-i18n="cat.vanity">Vanity & Hair</option>
+              <option value="wigs" data-i18n="cat.wigs">Wigs & Hair Units</option>
+            </select>
+          </div>
+          <p class="hint" data-i18n="ap.hint">Tip: use Duplicate to start a new product from an existing one's details.</p>
+          <div id="ap-list" class="order-list"></div>
+          <div id="ap-empty" class="empty-state" hidden><p class="muted" data-i18n="ap.empty">No products match. Add one to get started.</p></div>
+        </section>
+
+        <section id="admin-tab-sellers" class="tab-panel" hidden>
+          <div class="row-between">
+            <p class="small muted" data-i18n="sell.adminHint">Approve a store to publish its pieces in the shop.</p>
+            <label for="as-filter" class="sr-only" data-i18n="admin.filter">Filter by status</label>
+            <select id="as-filter" class="input input-sm">
+              <option value="all" data-i18n="sell.filterAll">All stores</option>
+              <option value="pending" data-i18n="sell.status.pending">Pending review</option>
+              <option value="approved" data-i18n="sell.status.approved">Live</option>
+              <option value="rejected" data-i18n="sell.status.rejected">Not approved</option>
+            </select>
+          </div>
+          <div id="as-list" class="order-list"></div>
+          <div id="as-empty" class="empty-state" hidden><p class="muted" data-i18n="sell.adminEmpty">No store applications here.</p></div>
+        </section>
+
+        <section id="admin-tab-shipping" class="tab-panel" hidden>
+          <form id="ship-settings-form" class="panel stack" novalidate>
+            <div class="form-grid">
+              <div class="field"><label for="set-threshold" data-i18n="admin.threshold">Free shipping over (USD)</label><input id="set-threshold" type="number" min="0" step="1" class="input" /></div>
+              <div class="field"><label for="set-rate" data-i18n="admin.rate">Naira per 1 USD</label><input id="set-rate" type="number" min="1" step="1" class="input" /></div>
+              <div class="field span-2"><label for="set-note" data-i18n="admin.dispatchNote">Dispatch note shown at checkout</label><textarea id="set-note" rows="2" maxlength="300" class="input"></textarea></div>
+            </div>
+            <p class="eyebrow" data-i18n="admin.methods">Shipping methods</p>
+            <div id="set-methods" class="method-editor"></div>
+            <button id="set-add-method" class="btn btn-outline btn-sm" type="button" data-i18n="admin.addMethod">+ Add method</button>
+            <p id="set-error" class="form-error" role="alert" hidden></p>
+            <button class="btn btn-primary btn-block" type="submit" data-i18n="admin.saveSettings">Save shipping settings</button>
+          </form>
+        </section>
+
+        <section id="admin-tab-overview" class="tab-panel" hidden>
+          <div class="metrics">
+            <div class="metric"><p class="metric-label" data-i18n="admin.mRevenue">Revenue</p><p id="m-revenue" class="metric-value"></p></div>
+            <div class="metric"><p class="metric-label" data-i18n="admin.mOrders">Orders</p><p id="m-orders" class="metric-value"></p></div>
+            <div class="metric"><p class="metric-label" data-i18n="admin.mAov">Average order</p><p id="m-aov" class="metric-value"></p></div>
+            <div class="metric metric-gold"><p class="metric-label" data-i18n="admin.mOpen">Awaiting dispatch</p><p id="m-open" class="metric-value"></p></div>
+          </div>
+          <div class="panel stack">
+            <p class="small muted" data-i18n="admin.restockHint">Sold 1-of-1 pieces are hidden from sale. Restore them if an order was cancelled.</p>
+            <button id="admin-restock" class="btn btn-outline btn-sm" type="button" data-i18n="admin.restock">Restore sold pieces to the vault</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+    <span class="dot dot-gold" aria-hidden="true"></span>
+    <span id="toast-msg"></span>
+  </div>
+
+  <!-- Mobile bottom tab bar -->
+  <nav class="tabbar" data-i18n-aria-label="tabbar.label" aria-label="Quick menu">
+    <button id="tb-shop" class="tb-btn" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16l-1.5 12.5a1 1 0 0 1-1 .9H6.5a1 1 0 0 1-1-.9Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span data-i18n="tabbar.shop">Shop</span>
+    </button>
+    <button class="tb-btn" type="button" data-proxy="btn-sell">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v1a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0V9M5 13v7h14v-7"/></svg>
+      <span data-i18n="header.sell">Sell</span>
+    </button>
+    <button class="tb-btn" type="button" data-proxy="btn-orders">
+      <span class="tb-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>
+        <span id="tb-orders-badge" class="count-badge count-rose" hidden></span>
+      </span>
+      <span data-i18n="header.orders">Orders</span>
+    </button>
+    <button class="tb-btn" type="button" data-proxy="btn-admin">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span data-i18n="header.admin">Admin</span>
+    </button>
+    <button class="tb-btn tb-bag" type="button" data-proxy="btn-bag">
+      <span class="tb-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5M5.5 7.5h13l1.3 13.2a1 1 0 0 1-1 1.1H5.2a1 1 0 0 1-1-1.1Z"/></svg>
+        <span id="tb-cart-count" class="count-badge" hidden></span>
+      </span>
+      <span data-i18n="header.bag">Bag</span>
+    </button>
+  </nav>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
