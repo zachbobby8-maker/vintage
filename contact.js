@@ -1,11 +1,16 @@
 // Contact feature: WhatsApp / Telegram links for buyers and the merchant's contact settings tab.
 const KEY = 'bv_contact';
+// Merchant WhatsApp: every "message the merchant" button and checkout order goes here.
+export const MERCHANT_WHATSAPP = '+1 (308) 289-0203';
+const OLD_PLACEHOLDER_WA = '2348012345678';
 const DEFAULTS = {
-  whatsapp: '+234 801 234 5678',
+  whatsapp: MERCHANT_WHATSAPP,
   telegram: 'BraidVintageBot',
-  hours: 'Mon–Sat · 9am–7pm WAT',
-  showWhatsapp: true,
+  hours: 'Mon–Sat, 9am–7pm WAT',
+  // Messages go straight to the admin inbox. Telegram is the optional extra; WhatsApp is off unless the admin turns it on.
+  showWhatsapp: false,
   showTelegram: true,
+  v: 2,
 };
 const WA_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2z"/></svg>';
 const TG_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"/><path d="m9 13 8-6"/></svg>';
@@ -167,6 +172,7 @@ export function initContact(ctx) {
       hours: $('#ct-hours').value.trim(),
       showWhatsapp: $('#ct-show-wa').checked,
       showTelegram: $('#ct-show-tg').checked,
+      v: 2,
     };
     let msg = '';
     if (next.whatsapp && digits(next.whatsapp).length < 8) msg = 'contact.errWa';
@@ -183,11 +189,27 @@ export function initContact(ctx) {
 
   async function load() {
     const stored = await ctx.load(KEY, null);
-    if (stored && typeof stored === 'object') settings = { ...DEFAULTS, ...stored };
-    else await ctx.save(KEY, settings);
+    if (stored && typeof stored === 'object') {
+      settings = { ...DEFAULTS, ...stored };
+      let changed = false;
+      // Replace the old sample number (or a blank one) with the real merchant number.
+      if (!digits(settings.whatsapp) || digits(settings.whatsapp) === OLD_PLACEHOLDER_WA) {
+        settings.whatsapp = MERCHANT_WHATSAPP;
+        changed = true;
+      }
+      // One-time switch: WhatsApp becomes optional (off), Telegram stays on.
+      if (stored.v !== 2) {
+        settings.showWhatsapp = false;
+        settings.showTelegram = true;
+        settings.v = 2;
+        changed = true;
+      }
+      if (changed) await ctx.save(KEY, settings);
+    } else await ctx.save(KEY, settings);
     renderPublic();
   }
 
+  // Optional outside links. Telegram first; WhatsApp only when the admin switched it on.
   function publicLinks(text) {
     return {
       wa: settings.showWhatsapp ? waLink(settings.whatsapp, text) : '',
