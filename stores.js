@@ -79,7 +79,7 @@ export function initStores(ctx) {
   };
 
   function render() {
-    const list = STORES.filter((s) => country === 'all' || s.country === country);
+    const list = STORES.filter((s) => !s.hidden && (country === 'all' || s.country === country));
     empty.hidden = list.length > 0;
     grid.innerHTML = list.map((s) => {
       const st = openStatus(s);
