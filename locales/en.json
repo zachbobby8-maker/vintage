@@ -10,10 +10,10 @@
     "foot": "Shop online from any country — orders ship from the store closest to you.",
     "hq": "Head store",
     "imgAlt": "Inside the Braid Vintage store in {city}",
-    "openUntil": "Open now · closes {time}",
-    "opensAt": "Closed · opens today at {time}",
-    "opensTomorrow": "Closed · opens tomorrow at {time}",
-    "opensOn": "Closed · opens {day} at {time}",
+    "openUntil": "Open now, closes {time}",
+    "opensAt": "Closed, opens today at {time}",
+    "opensTomorrow": "Closed, opens tomorrow at {time}",
+    "opensOn": "Closed, opens {day} at {time}",
     "closed": "Closed",
     "hoursWeek": "Mon–Thu: {open}–{close}",
     "hoursSat": "Fri–Sat: {open}–{close}",
@@ -38,6 +38,12 @@
     "ZA": "South Africa",
     "GH": "Ghana"
   },
+  "msg": {
+    "askBag": "Hi Braid Vintage! I'd like to ask about these pieces before I buy:\n{items}\nSubtotal: {total}",
+    "order": "Hi Braid Vintage! I just placed order {id}.\n{items}\nTotal: {total}\nShipping: {method}\nName: {name}\nContact: {phone}\nAddress: {address}\nNote: {note}",
+    "noNote": "none",
+    "noContact": "Merchant contact isn't set up yet. Message us from Orders & chat."
+  },
   "day": {
     "sun": "Sunday",
     "mon": "Monday",
@@ -52,7 +58,7 @@
     "countdown": "{d}d {h}h {m}m {s}s",
     "freeShip": "Complimentary express shipping over {amount}"
   },
-  "brand": { "tagline": "Archive Couture · Sealed Vanity" },
+  "brand": { "tagline": "Archive Couture & Sealed Vanity" },
   "nav": { "label": "Categories" },
   "currency": { "label": "Currency" },
   "tabbar": { "label": "Quick menu", "shop": "Shop" },
@@ -98,7 +104,7 @@
   "casting": {
     "imgAlt": "Model posing for a Braid Vintage campaign",
     "badge": "Now casting",
-    "eyebrow": "Model call · Edition 05 campaign",
+    "eyebrow": "Model call for our Edition 05 campaign",
     "title1": "Braid Vintage is",
     "title2": "looking for models.",
     "lead": "We're casting fresh faces for our next lookbook, wig campaign and runway shows in Lagos. Female and male models aged 18 to 22 — no experience needed. Message the admin to apply.",
@@ -108,8 +114,8 @@
     "cta": "Apply — message the admin",
     "wa": "Apply on WhatsApp",
     "waText": "Hi BraidVintage! I'd like to apply to model for you (ages 18–22).",
-    "mineStatus": "You applied on {date} · Status: {status}",
-    "dlgEyebrow": "Model casting · Ages 18–22",
+    "mineStatus": "You applied on {date}. Status: {status}",
+    "dlgEyebrow": "Model casting, ages 18–22",
     "dlgTitle": "Apply to model for Braid Vintage",
     "formHint": "Fill this in and your application goes straight to the admin's inbox. We'll message you on WhatsApp if you're shortlisted.",
     "name": "Full name",
@@ -147,9 +153,9 @@
     "filterAll": "All applicants",
     "adminHint": "Model applications (ages 18–22). Shortlist the ones you like and message them on WhatsApp.",
     "adminEmpty": "No applications here yet.",
-    "count": "{n} applications · {fresh} new",
+    "count": "{n} applications, {fresh} new",
     "ageN": "{n} yrs",
-    "appliedOn": "Applied {date} · {id}",
+    "appliedOn": "Applied {date} ({id})",
     "shortlist": "Shortlist",
     "decline": "Decline",
     "markNew": "Mark as new",
@@ -180,7 +186,7 @@
     "bagAria": "Open your bag"
   },
   "hero": {
-    "chip": "Autumn / Winter Archive Drop · Edition 04",
+    "chip": "Autumn / Winter Archive Drop, Edition 04",
     "title1": "Heirloom 90s couture &",
     "title2": "velvet vanity",
     "title3": "rituals.",
@@ -188,7 +194,7 @@
     "ctaShop": "Shop the archive drop",
     "ctaBeauty": "Explore sealed beauty",
     "img1Alt": "Model in a 1994 archive silk slip dress",
-    "cap1Eyebrow": "Lot #01 · 1 of 1 archive",
+    "cap1Eyebrow": "Lot #01, 1 of 1 archive",
     "cap1Title": "1994 Milan silk bias slip dress",
     "img2Alt": "Crushed-berry lip oil trio",
     "cap2Eyebrow": "Factory sealed",
@@ -222,7 +228,7 @@
   },
   "bundle": {
     "addKit": "Add vanity ritual kit",
-    "chip": "Signature vanity edit · Save 35%",
+    "chip": "Signature vanity edit: save 35%",
     "title": "The 90s supermodel \"Complete the Look\" edit",
     "text": "Finish any archive piece with our sealed set: velvet crushed-berry lip oil, gold-plated tortoise claw clip and a silk satin bonnet.",
     "addFull": "Add the vanity bundle",
@@ -240,7 +246,7 @@
     "chat": "Message the merchant",
     "sell": "Sell with Braid",
     "k2": "Hygiene seal guarantee",
-    "k3": "Paystack NGN · Apple Pay · Cards",
+    "k3": "Paystack NGN, Apple Pay & cards",
     "k4": "$BRAID wallet settlement",
     "copy": "© 2026 BraidVintage.com. All rights reserved."
   },
@@ -299,7 +305,7 @@
     "category": "Category",
     "tag": "Label",
     "era": "Era / subtitle",
-    "eraPh": "1994 · Milan",
+    "eraPh": "1994, Milan",
     "sku": "SKU (optional)",
     "oneOfOne": "One-of-a-kind piece",
     "pricing": "Price & stock",
@@ -345,6 +351,7 @@
     "browse": "Browse the vault",
     "subtotal": "Subtotal",
     "checkout": "Proceed to checkout",
+    "ask": "Message the merchant about this bag",
     "freeUnlocked": "Complimentary shipping unlocked!",
     "freeRemaining": "Add {amount} for complimentary shipping",
     "remove": "Remove item",
@@ -374,6 +381,9 @@
     "countryPh": "Nigeria"
   },
   "chk": {
+    "sendWaTitle": "Also send my order to the merchant",
+    "sendWaText": "Opens WhatsApp (or Telegram) with your order details ready to send, so the merchant sees it straight away.",
+    "ask": "Ask the merchant before paying",
     "eyebrow": "Secure settlement",
     "title": "Checkout",
     "contact": "Contact",
@@ -381,7 +391,7 @@
     "method": "Shipping method",
     "payment": "Payment",
     "railFiat": "Card / Paystack",
-    "railBraid": "$BRAID wallet · 5% off",
+    "railBraid": "$BRAID wallet (5% off)",
     "fiatText": "Visa, Mastercard, Apple Pay and Paystack (NGN/USD). Same-day courier in Lagos, 48-hour DHL worldwide.",
     "braidText": "Settle from BraidWallet, Ledger or MetaMask. $BRAID holders get 5% off.",
     "note": "Note to the merchant (optional)",
@@ -423,7 +433,7 @@
     "emptyAdmin": "No messages yet.",
     "sys": {
       "placed": "Order {id} placed. Message the merchant here any time.",
-      "shipUpdated": "Shipping updated: {status} · {method} · tracking {tracking}"
+      "shipUpdated": "Shipping updated: {status}, {method}, tracking {tracking}"
     }
   },
   "status": {
@@ -477,7 +487,7 @@
     "saveShipping": "Save shipping details",
     "saved": "Shipping details saved.",
     "errAddress": "Address, city and country are required.",
-    "totalLine": "Total {total} · shipping {shipping} · paid by {rail}",
+    "totalLine": "Total {total}, shipping {shipping}, paid by {rail}",
     "railFiat": "card / Paystack",
     "railBraid": "$BRAID wallet",
     "buyerNote": "Buyer note: {note}",
@@ -527,7 +537,7 @@
     "tgLabel": "Telegram username or bot",
     "tgPh": "BraidVintageBot",
     "hoursLabel": "Reply hours shown to buyers",
-    "hoursPh": "Mon–Sat · 9am–7pm WAT",
+    "hoursPh": "Mon–Sat, 9am–7pm WAT",
     "showWa": "Show WhatsApp button to buyers",
     "showTg": "Show Telegram button to buyers",
     "save": "Save contact settings",
@@ -563,7 +573,7 @@
     "liveStores": "Partner stores live now",
     "shopPartners": "Shop partner stores",
     "productCount": "{n} piece(s)",
-    "byStore": "by {store} · {city}",
+    "byStore": "by {store}, {city}",
     "partnerCondition": "Brand new from {store}. Paid and shipped through BraidVintage, so you can message us about this order.",
     "dlgEyebrow": "Partner store",
     "dlgTitle": "Open your Braid store",
