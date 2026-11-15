@@ -91,7 +91,7 @@ export function initStores(ctx) {
           ${s.hq ? `<span class="store-hq">${esc(t('stores.hq'))}</span>` : ''}
         </div>
         <div class="store-body">
-          <p class="eyebrow">${esc(t('country.' + s.country))} · ${esc(s.area)}</p>
+          <p class="eyebrow">${esc(s.area)}, ${esc(t('country.' + s.country))}</p>
           <h3 class="display h4">${esc(s.city)}</h3>
           <p class="small strong">${esc(s.name)}</p>
           <p class="small muted">${esc(s.address)}</p>
@@ -128,12 +128,8 @@ export function initStores(ctx) {
     const s = STORES.find((x) => x.id === btn.dataset.storeMsg);
     if (!s) return;
     const text = t('stores.waText', { city: s.city, name: s.name });
-    const own = s.whatsapp && ctx.contact?.phoneLink(s.whatsapp, text);
-    const links = ctx.contact?.publicLinks(text) || {};
-    const url = own || links.wa || links.tg;
-    if (url) { window.open(url, '_blank', 'noopener'); return; }
-    ctx.toast(t('stores.useChat'));
-    document.querySelector('#btn-orders')?.click();
+    // Goes straight to the admin inbox (no WhatsApp needed).
+    window.dispatchEvent(new CustomEvent('bv:compose', { detail: { topic: 'store', text } }));
   });
 
   render();
