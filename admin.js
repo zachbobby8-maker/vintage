@@ -7,10 +7,13 @@ export function initAdmin(ctx) {
   const adminDialog = $('#admin-dialog');
   const passInput = $('#login-pass');
   const pass2Input = $('#login-pass2');
+  const userInput = $('#login-user');
   const loginError = $('#login-error');
+  const MIN_PASS = 4;
+  const norm = (v) => String(v || '').trim().toLowerCase();
   let hasPasscode = false;
   let currentId = null;
-  let activeTab = 'orders';
+  let activeTab = 'inbox';
   let methodsDraft = [];
   let lastUnread = state.orders.reduce((s, o) => s + (o.unreadAdmin || 0), 0);
 
@@ -43,27 +46,43 @@ export function initAdmin(ctx) {
     passInput.autocomplete = hasPasscode ? 'current-password' : 'new-password';
     $('#login-submit').textContent = t(hasPasscode ? 'login.signIn' : 'login.create');
     passInput.value = ''; pass2Input.value = '';
+    userInput.value = '';
     loginError.hidden = true;
     ctx.openDialog(loginDialog);
-    passInput.focus();
+    userInput.focus();
   }
 
   function showLoginError(key) { loginError.textContent = t(key); loginError.hidden = false; }
 
+  $('#login-show').addEventListener('click', (e) => {
+    const show = passInput.type === 'password';
+    passInput.type = show ? 'text' : 'password';
+    pass2Input.type = passInput.type;
+    e.currentTarget.textContent = t(show ? 'login.hide' : 'login.show');
+    e.currentTarget.setAttribute('aria-pressed', String(show));
+  });
+
   $('#login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pass = passInput.value;
+    const pass = passInput.value.trim();
+    const user = norm(userInput.value);
     const btn = $('#login-submit');
     btn.disabled = true;
     try {
+      if (user.length < 2) { showLoginError('login.errUser'); userInput.focus(); return; }
       if (!hasPasscode) {
-        if (pass.length < 6) { showLoginError('login.errShort'); return; }
-        if (pass !== pass2Input.value) { showLoginError('login.errMatch'); return; }
+        if (pass.length < MIN_PASS) { showLoginError('login.errShort'); return; }
+        if (pass !== pass2Input.value.trim()) { showLoginError('login.errMatch'); return; }
         const ok = await ctx.save(KEYS.adminHash, await hash(pass));
         if (!ok) { showLoginError('error.save'); return; }
+        await ctx.save(KEYS.adminUser, user);
       } else {
+        const savedUser = await ctx.load(KEYS.adminUser, null);
+        if (savedUser && norm(savedUser) !== user) { showLoginError('login.errWrong'); return; }
         const stored = await ctx.load(KEYS.adminHash, null);
         if (stored !== (await hash(pass))) { showLoginError('login.errWrong'); passInput.select(); return; }
+        // Older setups had no admin name: remember the one used now.
+        if (!savedUser) await ctx.save(KEYS.adminUser, user);
       }
       await ctx.save(KEYS.adminSession, 'ok', { area: 'session' });
       ctx.closeDialog(loginDialog);
@@ -95,7 +114,8 @@ export function initAdmin(ctx) {
       b.classList.toggle('is-active', on);
       b.setAttribute('aria-selected', String(on));
     });
-    ['orders', 'products', 'sellers', 'models', 'shipping', 'contact', 'overview'].forEach((name) => { const p = $('#admin-tab-' + name); if (p) p.hidden = name !== tab; });
+    ['inbox', 'orders', 'products', 'sellers', 'models', 'shipping', 'contact', 'overview'].forEach((name) => { const p = $('#admin-tab-' + name); if (p) p.hidden = name !== tab; });
+    if (tab === 'inbox') ctx.inbox?.renderAdmin();
     if (tab === 'models') ctx.casting?.renderAdmin();
     if (tab === 'products') ctx.catalogAdmin?.render();
     if (tab === 'sellers') ctx.sellers?.renderAdmin();
@@ -131,9 +151,9 @@ export function initAdmin(ctx) {
       const last = lastChat(o);
       const sub = last
         ? `${last.from === 'merchant' ? t('chat.you') : (o.customer?.name || t('chat.buyer'))}: ${last.text}`
-        : [o.shipping?.city, o.shipping?.methodName, formatDate(o.createdAt)].filter(Boolean).join(' · ');
+        : [o.shipping?.city, o.shipping?.methodName, formatDate(o.createdAt)].filter(Boolean).join(', ');
       return `<button class="order-row" type="button" data-admin-order="${esc(o.id)}">
-      <span class="order-row-main"><span class="order-row-title">${esc(o.id)} · ${esc(o.customer?.name || '')}</span>
+      <span class="order-row-main"><span class="order-row-title">${esc(o.id)}, ${esc(o.customer?.name || '')}</span>
       <span class="order-row-sub ${o.unreadAdmin ? 'msg-preview-unread' : ''}">${esc(sub)}</span></span>
       <span class="order-row-side"><span class="status-chip status-${esc(o.status)}">${esc(t('status.' + o.status))}</span>
       <span class="row"><span class="small strong">${esc(fmt(o.totalUsd))}</span>${o.unreadAdmin ? `<span class="count-badge count-rose" aria-label="${esc(t('orders.unread', { n: o.unreadAdmin }))}">${o.unreadAdmin}</span>` : ''}</span></span>
@@ -163,11 +183,11 @@ export function initAdmin(ctx) {
     $('#ao-detail').hidden = false;
     $('#ao-id').textContent = t('orders.orderNo', { id: o.id });
     $('#ao-date').textContent = formatDate(o.createdAt, true);
-    $('#ao-customer').textContent = [o.customer?.name, o.customer?.email, o.customer?.phone].filter(Boolean).join(' · ');
+    $('#ao-customer').textContent = [o.customer?.name, o.customer?.email, o.customer?.phone].filter(Boolean).join(', ');
     ctx.contact?.fillBuyerLink(o);
     ctx.statusChip($('#ao-status-chip'), o.status);
     $('#ao-items').innerHTML = o.items.map((i) => `<div class="mini-item"><img src="${esc(i.image)}" alt="" />
-      <div class="mini-item-main"><p class="strong">${esc(i.name)}</p><p class="muted">${esc(i.shade || t('cart.oneOfOne'))} · ×${i.qty}</p></div>
+      <div class="mini-item-main"><p class="strong">${esc(i.name)}</p><p class="muted">${esc(i.shade || t('cart.oneOfOne'))}, ×${i.qty}</p></div>
       <span class="strong">${esc(fmt(i.priceUsd * i.qty))}</span></div>`).join('');
     $('#ao-total').textContent = t('admin.totalLine', {
       total: fmt(o.totalUsd), shipping: o.shippingUsd ? fmt(o.shippingUsd) : t('chk.free'),
@@ -326,5 +346,11 @@ export function initAdmin(ctx) {
     if (currentId) { renderDetail(false); markRead(); } else renderList();
   });
 
-  return { open };
+  // Used by the Inbox tab to jump straight into an order's chat.
+  function openOrder(id) {
+    setTab('orders');
+    openDetail(id);
+  }
+
+  return { open, openOrder };
 }
