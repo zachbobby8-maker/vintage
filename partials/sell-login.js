@@ -65,7 +65,18 @@ export default `
       </div>
       <div class="modal-body">
         <p id="login-setup-hint" class="hint" hidden data-i18n="login.setupHint">First time here? Create an admin passcode (at least 6 characters).</p>
-        <div class="field"><label for="login-pass" data-i18n="login.pass">Passcode</label><input id="login-pass" type="password" class="input" autocomplete="current-password" /></div>
+        <div class="field">
+          <label for="login-user" data-i18n="login.user">Admin name</label>
+          <input id="login-user" type="text" class="input" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="80" data-i18n-placeholder="login.userPh" placeholder="Any word or email, e.g. braidadmin" />
+          <span class="small muted" data-i18n="login.userHint">It doesn't have to be an email. Any word works.</span>
+        </div>
+        <div class="field">
+          <label for="login-pass" data-i18n="login.pass">Passcode</label>
+          <div class="row">
+            <input id="login-pass" type="password" class="input" autocomplete="current-password" />
+            <button id="login-show" class="btn btn-outline btn-sm" type="button" aria-pressed="false" data-i18n="login.show">Show</button>
+          </div>
+        </div>
         <div id="login-confirm-wrap" class="field" hidden><label for="login-pass2" data-i18n="login.confirm">Confirm passcode</label><input id="login-pass2" type="password" class="input" autocomplete="new-password" /></div>
         <p id="login-error" class="form-error" role="alert" hidden></p>
         <button id="login-submit" class="btn btn-primary btn-lg btn-block" type="submit"></button>
