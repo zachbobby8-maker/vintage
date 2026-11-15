@@ -10,7 +10,7 @@ const ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
 // Plain strings go before the toast (dialogs); objects can target a page position.
 const PARTIALS = [checkout, sellLogin, productEditor, casting, { html: stores, before: '#casting' }];
 
-function translate(root, t) {
+export function translate(root, t) {
   const tr = (key) => { const v = t(key); return v && v !== key ? v : null; };
   root.querySelectorAll('[data-i18n]').forEach((el) => { const v = tr(el.dataset.i18n); if (v) el.textContent = v; });
   ATTRS.forEach((attr) => {
