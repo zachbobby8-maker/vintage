@@ -371,13 +371,13 @@ function nextOrderId() {
   const max = state.orders.reduce((m, o) => Math.max(m, parseInt(String(o.id).replace(/\D/g, ''), 10) || 0), 1040);
   return 'BV-' + (max + 1);
 }
-// Direct-to-merchant messaging (WhatsApp first, Telegram as backup).
+// Direct-to-merchant messaging: in-app inbox first; Telegram (or WhatsApp if switched on) is optional.
 function bagLinesText() {
   return cartLines().map((l) => `- ${l.product.name}${!l.product.oneOfOne && l.shade ? ` (${l.shade})` : ''} x${l.qty}: ${fmt(l.product.priceUsd * l.qty)}`).join('\n');
 }
 function openMerchant(text) {
   const links = contactUI?.publicLinks(text) || {};
-  const url = links.wa || links.tg;
+  const url = links.tg || links.wa;
   if (!url) return false;
   // Open in a new tab; if the browser blocks it, fall back to a normal link tap.
   let win = null;
@@ -392,7 +392,8 @@ function openMerchant(text) {
 function askMerchant() {
   if (!state.cart.length) return;
   const text = t('msg.askBag', { items: bagLinesText(), total: fmt(subtotalUsd()) });
-  if (!openMerchant(text)) { toast(t('msg.noContact')); }
+  closeDialog($('#cart-dialog'));
+  window.dispatchEvent(new CustomEvent('bv:compose', { detail: { topic: 'product', text } }));
 }
 async function submitCheckout(e) {
   e.preventDefault();
@@ -657,4 +658,3 @@ async function boot() {
   setInterval(pollOrders, 5000);
 }
 boot();
-
