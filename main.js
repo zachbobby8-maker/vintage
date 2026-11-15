@@ -7,10 +7,29 @@ import { initCatalogAdmin } from './catalog-admin.js';
 import { initContact } from './contact.js';
 import { initCasting } from './casting.js';
 import { initBrands } from './brands.js';
-import { loadPartials } from './partials.js';
+import { loadPartials, translate } from './partials.js';
 import { initStores } from './stores.js';
 
-const t = (key, values) => window.miniappI18n?.t(key, values) ?? key;
+// Backup word list: used when the site runs outside the builder (e.g. on Vercel)
+// or before the translations load, so raw keys like "heading.all" never show.
+let FALLBACK = null;
+const lookup = (key) => key.split('.').reduce((o, k) => (o && typeof o === 'object' ? o[k] : undefined), FALLBACK);
+const fill = (str, values) => str.replace(/\{(\w+)\}/g, (m, n) => (values && values[n] != null ? String(values[n]) : m));
+const t = (key, values) => {
+  let v;
+  try { v = window.miniappI18n?.t?.(key, values); } catch { v = undefined; }
+  if (typeof v === 'string' && v && v !== key) return v;
+  const raw = FALLBACK ? lookup(key) : undefined;
+  return typeof raw === 'string' ? fill(raw, values) : key;
+};
+async function loadFallbackWords() {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const res = await fetch(new URL('./locales/en.json', import.meta.url), { signal: ctrl.signal });
+    if (res.ok) FALLBACK = await res.json();
+  } catch { FALLBACK = null; } finally { clearTimeout(timer); }
+}
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const storage = window.miniappsAI?.storage;
@@ -518,6 +537,8 @@ async function pollOrders() {
 }
 
 /* ---------- wiring ---------- */
+await loadFallbackWords();
+if (!window.miniappI18n) translate(document, t);
 loadPartials(t);
 const ctx = {
   t, esc, fmt, formatDate, toast, openDialog, closeDialog, state, KEYS, STATUSES,
