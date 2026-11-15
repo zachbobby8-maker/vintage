@@ -17,7 +17,7 @@ export default `
           <div class="form-grid">
             <div class="field"><label for="chk-name" data-i18n="field.name">Full name</label><input id="chk-name" class="input" autocomplete="name" data-i18n-placeholder="field.namePh" placeholder="Amara Okafor" /></div>
             <div class="field"><label for="chk-email" data-i18n="field.email">Email</label><input id="chk-email" type="email" class="input" autocomplete="email" data-i18n-placeholder="field.emailPh" placeholder="amara@email.com" /></div>
-            <div class="field span-2"><label for="chk-phone" data-i18n="field.phone">Phone / WhatsApp</label><input id="chk-phone" type="tel" class="input" autocomplete="tel" data-i18n-placeholder="field.phonePh" placeholder="+234 801 234 5678" /></div>
+            <div class="field span-2"><label for="chk-phone" data-i18n="field.phone">Phone / WhatsApp</label><input id="chk-phone" type="tel" class="input" autocomplete="tel" data-i18n-placeholder="field.phonePh" placeholder="Your phone number with country code" /></div>
           </div>
         </fieldset>
         <fieldset class="fieldset">
@@ -62,7 +62,6 @@ export default `
           </span>
         </label>
         <button id="chk-submit" class="btn btn-primary btn-lg btn-block" type="submit" data-i18n="chk.submit">Confirm & place order</button>
-        <button id="chk-ask" class="btn btn-outline btn-block" type="button" data-i18n="chk.ask">Ask the merchant before paying</button>
       </div>
     </form>
   </dialog>
