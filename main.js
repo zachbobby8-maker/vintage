@@ -40,6 +40,10 @@ const orderListeners = [];
 let lastOrdersRaw = '';
 
 /* ---------- helpers ---------- */
+// Swap "·" separators in product text for commas (also fixes saved products).
+function tidy(value) {
+  return String(value ?? '').replace(/\s*·\s*/g, ', ');
+}
 function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -134,7 +138,7 @@ function renderChat(container, order, viewer) {
     if (m.from === 'system') return `<div class="msg msg-system">${esc(messageText(m))}</div>`;
     const mine = m.from === viewer;
     const who = mine ? t('chat.you') : m.from === 'merchant' ? t('chat.merchant') : (order.customer?.name || t('chat.buyer'));
-    return `<div class="msg ${mine ? 'msg-mine' : 'msg-theirs'}"><span class="msg-meta">${esc(who)} · ${esc(formatDate(m.at, true))}</span><span>${esc(m.text)}</span></div>`;
+    return `<div class="msg ${mine ? 'msg-mine' : 'msg-theirs'}"><span class="msg-meta">${esc(who)}, ${esc(formatDate(m.at, true))}</span><span>${esc(m.text)}</span></div>`;
   }).join('');
   container.scrollTop = container.scrollHeight;
 }
@@ -193,9 +197,9 @@ function renderProducts() {
         <span class="card-hover">${esc(t('card.inspect'))}</span>
       </button>
       <div class="card-body">
-        <div class="card-meta"><span>${esc(p.era)}</span><span>${esc(t('cat.' + p.category))}</span></div>
+        <div class="card-meta"><span>${esc(tidy(p.era))}</span><span>${esc(t('cat.' + p.category))}</span></div>
         <h3 class="card-title"><button class="link-btn" type="button" data-qv="${p.id}">${esc(p.name)}</button></h3>
-        <p class="card-desc">${esc(p.measurements)}</p>
+        <p class="card-desc">${esc(tidy(p.measurements))}</p>
         ${!sold && !p.oneOfOne && p.stock != null && p.stock <= 5 ? `<p class="stock-note">${esc(t('qv.onlyLeft', { n: p.stock }))}</p>` : ''}
         <div class="card-foot"><span class="price-wrap"><span class="price">${esc(fmt(p.priceUsd))}</span>${p.compareUsd > p.priceUsd ? `<span class="strike">${esc(fmt(p.compareUsd))}</span>` : ''}</span>
           <button class="btn btn-primary btn-sm" type="button" data-add="${p.id}" ${unav ? 'disabled' : ''}>${esc(label)}</button></div>
@@ -239,6 +243,7 @@ function renderCart() {
   $('#cart-count').textContent = String(qty);
   $('#cart-subtotal').textContent = fmt(sub);
   $('#btn-checkout').disabled = lines.length === 0;
+  $('#btn-cart-ask').hidden = lines.length === 0;
   const pct = threshold > 0 ? Math.min(100, Math.round((sub / threshold) * 100)) : 100;
   $('#ship-progress-bar').style.width = pct + '%';
   $('#ship-progress-pct').textContent = pct + '%';
@@ -335,6 +340,22 @@ function nextOrderId() {
   const max = state.orders.reduce((m, o) => Math.max(m, parseInt(String(o.id).replace(/\D/g, ''), 10) || 0), 1040);
   return 'BV-' + (max + 1);
 }
+// Direct-to-merchant messaging (WhatsApp first, Telegram as backup).
+function bagLinesText() {
+  return cartLines().map((l) => `- ${l.product.name}${!l.product.oneOfOne && l.shade ? ` (${l.shade})` : ''} x${l.qty}: ${fmt(l.product.priceUsd * l.qty)}`).join('\n');
+}
+function openMerchant(text) {
+  const links = contactUI?.publicLinks(text) || {};
+  const url = links.wa || links.tg;
+  if (!url) return false;
+  window.open(url, '_blank', 'noopener');
+  return true;
+}
+function askMerchant() {
+  if (!state.cart.length) return;
+  const text = t('msg.askBag', { items: bagLinesText(), total: fmt(subtotalUsd()) });
+  if (!openMerchant(text)) { toast(t('msg.noContact')); }
+}
 async function submitCheckout(e) {
   e.preventDefault();
   const v = (id) => $(id).value.trim();
@@ -355,6 +376,16 @@ async function submitCheckout(e) {
   const totals = computeTotals();
   const id = nextOrderId();
   const note = $('#chk-note').value.trim();
+  // Open WhatsApp right away (inside the tap) so the browser doesn't block it.
+  if ($('#chk-send-wa').checked) {
+    const waText = t('msg.order', {
+      id, items: bagLinesText(), total: fmt(totals.total), method: method.name,
+      name: fields.name, phone: fields.phone || fields.email,
+      address: [fields.address, fields.city, fields.country].join(', '),
+      note: note || t('msg.noNote'),
+    });
+    openMerchant(waText);
+  }
   const order = {
     id, createdAt: Date.now(), status: 'placed', rail: state.rail,
     items: cartLines().map((l) => ({ id: l.id, name: l.product.name, image: l.product.image, shade: l.product.oneOfOne ? null : l.shade, qty: l.qty, priceUsd: l.product.priceUsd })),
@@ -551,6 +582,8 @@ function bindEvents() {
   $('#btn-admin').addEventListener('click', () => adminUI.open());
   $('#cart-browse').addEventListener('click', () => { closeDialog($('#cart-dialog')); setCategory('all'); $('#catalog').scrollIntoView({ behavior: 'smooth' }); });
   $('#btn-checkout').addEventListener('click', openCheckout);
+  $('#btn-cart-ask').addEventListener('click', askMerchant);
+  $('#chk-ask').addEventListener('click', askMerchant);
   $('#chk-methods').addEventListener('change', (e) => {
     if (e.target.name === 'ship-method') { state.methodId = e.target.value; renderCheckoutTotals(); }
   });
