@@ -382,8 +382,7 @@
   },
   "chk": {
     "sendWaTitle": "Also send my order to the merchant",
-    "sendWaText": "Opens WhatsApp (or Telegram) with your order details ready to send, so the merchant sees it straight away.",
-    "ask": "Ask the merchant before paying",
+    "sendWaText": "Opens WhatsApp with your order details ready to send to +1 (308) 289-0203, so the merchant sees it straight away.",
     "eyebrow": "Secure settlement",
     "title": "Checkout",
     "contact": "Contact",
@@ -453,14 +452,20 @@
   "login": {
     "eyebrow": "Merchant access",
     "title": "Admin login",
-    "setupHint": "First time here? Create an admin passcode (at least 6 characters).",
+    "setupHint": "First time on this device? Pick an admin name (any word) and a passcode of at least 4 characters. Use the same ones next time.",
+    "user": "Admin name",
+    "userPh": "Any word or email, e.g. braidadmin",
+    "userHint": "It doesn't have to be an email. Any word works.",
     "pass": "Passcode",
-    "confirm": "Confirm passcode",
+    "show": "Show",
+    "hide": "Hide",
+    "confirm": "Type the passcode again",
     "signIn": "Sign in",
-    "create": "Create passcode & sign in",
-    "errShort": "Use at least 6 characters.",
-    "errMatch": "The passcodes don't match.",
-    "errWrong": "That passcode isn't right. Try again.",
+    "create": "Create my login & sign in",
+    "errUser": "Type an admin name (at least 2 letters). Any word is fine.",
+    "errShort": "Use at least 4 characters for the passcode.",
+    "errMatch": "The two passcodes don't match.",
+    "errWrong": "That admin name or passcode isn't right. Try again.",
     "welcome": "Welcome back to the merchant console."
   },
   "admin": {
@@ -634,5 +639,57 @@
       "delete": "{store} was deleted."
     }
   }
+  ,
+  "inbox": {
+    "eyebrow": "Client concierge",
+    "title": "Message the merchant",
+    "lead": "Ask anything: a piece, sizing, delivery or selling with us. No order needed. We usually reply within a few hours.",
+    "mineTitle": "Your conversations",
+    "newMessage": "Start a new message",
+    "back": "Back",
+    "name": "Your name",
+    "namePh": "Amara O.",
+    "contact": "Phone, WhatsApp or email",
+    "contactPh": "+234 801 000 0000",
+    "topic": "What is it about?",
+    "topics": {
+      "product": "A product",
+      "sizing": "Sizing & fit",
+      "delivery": "Delivery",
+      "selling": "Selling with Braid",
+      "other": "Something else"
+    },
+    "message": "Your message",
+    "messagePh": "Hi! I'd like to know…",
+    "send": "Send message",
+    "sending": "Sending…",
+    "sent": "Message sent. The merchant will reply here.",
+    "waInstead": "Or message us on WhatsApp",
+    "waText": "Hello BraidVintage, I have a question:",
+    "replyPh": "Write a reply…",
+    "fab": "Message us",
+    "fabAria": "Message the merchant",
+    "tab": "Inbox",
+    "adminHint": "Every message from visitors and buyers, newest and unread first.",
+    "filter": "Filter messages",
+    "filters": {
+      "all": "All messages",
+      "unread": "Unread only",
+      "visitors": "Visitor messages",
+      "orders": "Order chats"
+    },
+    "empty": "No messages here yet.",
+    "replyWa": "Reply on WhatsApp",
+    "replyEmail": "Reply by email",
+    "waReply": "Hello {name}, this is BraidVintage replying to your message.",
+    "mailSubject": "Your message to BraidVintage",
+    "delete": "Delete conversation",
+    "confirmDelete": "Delete the conversation with {name}?",
+    "deleted": "Conversation deleted.",
+    "newVisitor": "New message from {name}",
+    "kindOrder": "Order {id}",
+    "errRequired": "Please add your name, a way to reach you, and a message.",
+    "errContact": "Add a phone number (at least 7 digits) or an email so we can reply.",
+    "errSend": "Couldn't send right now. Please try again."
+  }
 }
-
