@@ -1,4 +1,7 @@
-// Merchant feature: passcode login, order inbox with chat, shipping edits and settings.
+// Merchant feature: server-checked admin login, order inbox with chat, shipping edits and settings.
+// Login is checked by api/admin-login.js on Vercel against the ADMIN_* environment variables.
+const LOGIN_URL = '/api/admin-login';
+
 export function initAdmin(ctx) {
   const { t, esc, fmt, formatDate, state, KEYS } = ctx;
   const $ = (sel) => document.querySelector(sel);
@@ -6,16 +9,24 @@ export function initAdmin(ctx) {
   const loginDialog = $('#login-dialog');
   const adminDialog = $('#admin-dialog');
   const passInput = $('#login-pass');
-  const pass2Input = $('#login-pass2');
   const userInput = $('#login-user');
   const loginError = $('#login-error');
-  const MIN_PASS = 4;
   const norm = (v) => String(v || '').trim().toLowerCase();
-  let hasPasscode = false;
   let currentId = null;
   let activeTab = 'inbox';
   let methodsDraft = [];
   let lastUnread = state.orders.reduce((s, o) => s + (o.unreadAdmin || 0), 0);
+  let adminName = '';
+
+  // Shows which admin is signed in, next to "Log out".
+  const who = document.createElement('span');
+  who.className = 'small admin-who';
+  who.hidden = true;
+  $('#admin-logout')?.before(who);
+
+  // Old self-made logins from earlier versions no longer work: wipe them.
+  ctx.remove(KEYS.adminHash);
+  ctx.remove(KEYS.adminUser);
 
   // Inbox filter: "Unread messages" quick option
   const unreadOpt = document.createElement('option');
@@ -24,32 +35,27 @@ export function initAdmin(ctx) {
   $('#ao-filter').options[0]?.after(unreadOpt);
 
   /* ---------- login ---------- */
-  async function hash(text) {
-    const data = new TextEncoder().encode('braidvintage:' + text);
-    try {
-      const buf = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
-    } catch {
-      let h = 0;
-      for (const b of data) h = (h * 31 + b) | 0;
-      return 'fallback-' + h;
-    }
+  async function validSession() {
+    const s = await ctx.load(KEYS.adminSession, null, { area: 'session' });
+    if (!s || typeof s !== 'object' || !s.token || !s.exp || s.exp < Date.now()) return null;
+    return s;
   }
 
   async function open() {
-    const session = await ctx.load(KEYS.adminSession, null, { area: 'session' });
-    if (session === 'ok') { openConsole(); return; }
-    const stored = await ctx.load(KEYS.adminHash, null);
-    hasPasscode = typeof stored === 'string' && stored.length > 0;
-    $('#login-setup-hint').hidden = hasPasscode;
-    $('#login-confirm-wrap').hidden = hasPasscode;
-    passInput.autocomplete = hasPasscode ? 'current-password' : 'new-password';
-    $('#login-submit').textContent = t(hasPasscode ? 'login.signIn' : 'login.create');
-    passInput.value = ''; pass2Input.value = '';
+    const session = await validSession();
+    if (session) { setWho(session.name); openConsole(); return; }
+    await ctx.remove(KEYS.adminSession, { area: 'session' });
+    passInput.value = '';
     userInput.value = '';
     loginError.hidden = true;
     ctx.openDialog(loginDialog);
     userInput.focus();
+  }
+
+  function setWho(name) {
+    adminName = name || '';
+    who.textContent = adminName ? t('login.signedInAs', { name: adminName }) : '';
+    who.hidden = !adminName;
   }
 
   function showLoginError(key) { loginError.textContent = t(key); loginError.hidden = false; }
@@ -57,36 +63,43 @@ export function initAdmin(ctx) {
   $('#login-show').addEventListener('click', (e) => {
     const show = passInput.type === 'password';
     passInput.type = show ? 'text' : 'password';
-    pass2Input.type = passInput.type;
     e.currentTarget.textContent = t(show ? 'login.hide' : 'login.show');
     e.currentTarget.setAttribute('aria-pressed', String(show));
   });
 
   $('#login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pass = passInput.value.trim();
+    const pass = passInput.value;
     const user = norm(userInput.value);
     const btn = $('#login-submit');
+    if (!user || !pass) { showLoginError('login.errEmpty'); return; }
     btn.disabled = true;
+    loginError.hidden = true;
     try {
-      if (user.length < 2) { showLoginError('login.errUser'); userInput.focus(); return; }
-      if (!hasPasscode) {
-        if (pass.length < MIN_PASS) { showLoginError('login.errShort'); return; }
-        if (pass !== pass2Input.value.trim()) { showLoginError('login.errMatch'); return; }
-        const ok = await ctx.save(KEYS.adminHash, await hash(pass));
-        if (!ok) { showLoginError('error.save'); return; }
-        await ctx.save(KEYS.adminUser, user);
-      } else {
-        const savedUser = await ctx.load(KEYS.adminUser, null);
-        if (savedUser && norm(savedUser) !== user) { showLoginError('login.errWrong'); return; }
-        const stored = await ctx.load(KEYS.adminHash, null);
-        if (stored !== (await hash(pass))) { showLoginError('login.errWrong'); passInput.select(); return; }
-        // Older setups had no admin name: remember the one used now.
-        if (!savedUser) await ctx.save(KEYS.adminUser, user);
+      let res; let data = null;
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 15000);
+        res = await fetch(LOGIN_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: user, passcode: pass }),
+          signal: ctrl.signal,
+        });
+        clearTimeout(timer);
+        try { data = await res.json(); } catch { data = null; }
+      } catch {
+        showLoginError('login.errNetwork');
+        return;
       }
-      await ctx.save(KEYS.adminSession, 'ok', { area: 'session' });
+      if (!data) { showLoginError('login.errSetup'); return; }
+      if (data.error === 'not_configured') { showLoginError('login.errNoAdmins'); return; }
+      if (!res.ok || !data.ok || !data.token) { showLoginError('login.errWrong'); passInput.select(); return; }
+      await ctx.save(KEYS.adminSession, { name: data.name, token: data.token, exp: data.exp }, { area: 'session' });
+      setWho(data.name);
+      passInput.value = '';
       ctx.closeDialog(loginDialog);
-      ctx.toast(t('login.welcome'));
+      ctx.toast(t('login.welcomeName', { name: data.name }));
       openConsole();
     } finally {
       btn.disabled = false;
@@ -95,6 +108,7 @@ export function initAdmin(ctx) {
 
   async function logout() {
     await ctx.remove(KEYS.adminSession, { area: 'session' });
+    setWho('');
     ctx.closeDialog(adminDialog);
     ctx.toast(t('admin.loggedOut'));
   }
@@ -114,7 +128,8 @@ export function initAdmin(ctx) {
       b.classList.toggle('is-active', on);
       b.setAttribute('aria-selected', String(on));
     });
-    ['inbox', 'orders', 'products', 'sellers', 'models', 'shipping', 'contact', 'overview'].forEach((name) => { const p = $('#admin-tab-' + name); if (p) p.hidden = name !== tab; });
+    ['inbox', 'orders', 'products', 'sellers', 'models', 'shipping', 'contact', 'site', 'overview'].forEach((name) => { const p = $('#admin-tab-' + name); if (p) p.hidden = name !== tab; });
+    if (tab === 'site') ctx.siteEditor?.renderAdmin();
     if (tab === 'inbox') ctx.inbox?.renderAdmin();
     if (tab === 'models') ctx.casting?.renderAdmin();
     if (tab === 'products') ctx.catalogAdmin?.render();
