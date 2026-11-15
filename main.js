@@ -6,6 +6,7 @@ import { initQuickView } from './quickview.js';
 import { initCatalogAdmin } from './catalog-admin.js';
 import { initContact } from './contact.js';
 import { initCasting } from './casting.js';
+import { initInbox } from './inbox.js';
 import { initBrands } from './brands.js';
 import { loadPartials, translate } from './partials.js';
 import { initStores } from './stores.js';
@@ -32,11 +33,22 @@ async function loadFallbackWords() {
 }
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-const storage = window.miniappsAI?.storage;
+// Builder storage when available; on a plain website (e.g. Vercel) fall back to this
+// browser's own storage so passcodes, orders and messages are still kept.
+function browserStorage() {
+  const pick = (opts) => (opts?.area === 'session' ? window.sessionStorage : window.localStorage);
+  try { window.localStorage.setItem('bv_probe', '1'); window.localStorage.removeItem('bv_probe'); } catch { return null; }
+  return {
+    async getItem(key, opts) { return pick(opts).getItem(key); },
+    async setItem(key, value, opts) { pick(opts).setItem(key, value); },
+    async removeItem(key, opts) { pick(opts).removeItem(key); },
+  };
+}
+const storage = window.miniappsAI?.storage || browserStorage();
 
 const KEYS = {
   cart: 'bv_cart', orders: 'bv_orders', shipping: 'bv_shipping', sold: 'bv_sold',
-  currency: 'bv_currency', buyer: 'bv_buyer', adminHash: 'bv_admin_hash', adminSession: 'bv_admin_session',
+  currency: 'bv_currency', buyer: 'bv_buyer', adminHash: 'bv_admin_hash', adminSession: 'bv_admin_session', adminUser: 'bv_admin_user',
 };
 const STATUSES = ['placed', 'processing', 'shipped', 'delivered', 'cancelled'];
 const BRAID_RATE = 0.42;
@@ -367,7 +379,14 @@ function openMerchant(text) {
   const links = contactUI?.publicLinks(text) || {};
   const url = links.wa || links.tg;
   if (!url) return false;
-  window.open(url, '_blank', 'noopener');
+  // Open in a new tab; if the browser blocks it, fall back to a normal link tap.
+  let win = null;
+  try { win = window.open(url, '_blank'); } catch { win = null; }
+  if (!win) {
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a); a.click(); a.remove();
+  } else { try { win.opener = null; } catch { /* ignore */ } }
   return true;
 }
 function askMerchant() {
@@ -560,7 +579,10 @@ const castingUI = initCasting(ctx);
 ctx.casting = castingUI;
 initBrands(ctx);
 initStores(ctx);
+const inboxUI = initInbox(ctx);
+ctx.inbox = inboxUI;
 const adminUI = initAdmin(ctx);
+ctx.admin = adminUI;
 
 function bindEvents() {
   document.addEventListener('click', (e) => {
@@ -599,12 +621,11 @@ function bindEvents() {
   $('#btn-ngn').addEventListener('click', () => setCurrency('NGN'));
   $('#btn-bag').addEventListener('click', () => openDialog($('#cart-dialog')));
   $('#btn-orders').addEventListener('click', () => ordersUI.open());
-  $('#footer-chat').addEventListener('click', () => ordersUI.open());
+  $('#footer-chat').addEventListener('click', () => inboxUI.open());
   $('#btn-admin').addEventListener('click', () => adminUI.open());
   $('#cart-browse').addEventListener('click', () => { closeDialog($('#cart-dialog')); setCategory('all'); $('#catalog').scrollIntoView({ behavior: 'smooth' }); });
   $('#btn-checkout').addEventListener('click', openCheckout);
   $('#btn-cart-ask').addEventListener('click', askMerchant);
-  $('#chk-ask').addEventListener('click', askMerchant);
   $('#chk-methods').addEventListener('change', (e) => {
     if (e.target.name === 'ship-method') { state.methodId = e.target.value; renderCheckoutTotals(); }
   });
@@ -622,6 +643,7 @@ async function boot() {
   await contactUI.load();
   await castingUI.load();
   await loadState();
+  await inboxUI.load();
   renderCounts();
   setCurrency(state.currency, false);
   setCategory(state.category);
