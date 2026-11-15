@@ -10,18 +10,25 @@ import { initInbox } from './inbox.js';
 import { initBrands } from './brands.js';
 import { loadPartials, translate } from './partials.js';
 import { initStores } from './stores.js';
+import { initSiteEditor } from './site-editor.js';
 
 // Backup word list: used when the site runs outside the builder (e.g. on Vercel)
 // or before the translations load, so raw keys like "heading.all" never show.
 let FALLBACK = null;
 const lookup = (key) => key.split('.').reduce((o, k) => (o && typeof o === 'object' ? o[k] : undefined), FALLBACK);
 const fill = (str, values) => str.replace(/\{(\w+)\}/g, (m, n) => (values && values[n] != null ? String(values[n]) : m));
-const t = (key, values) => {
+// Words the admin changed in "Edit site" win over the built-in wording.
+let OVERRIDES = {};
+const baseT = (key, values) => {
   let v;
   try { v = window.miniappI18n?.t?.(key, values); } catch { v = undefined; }
   if (typeof v === 'string' && v && v !== key) return v;
   const raw = FALLBACK ? lookup(key) : undefined;
   return typeof raw === 'string' ? fill(raw, values) : key;
+};
+const t = (key, values) => {
+  const o = OVERRIDES[key];
+  return typeof o === 'string' && o ? fill(o, values) : baseT(key, values);
 };
 async function loadFallbackWords() {
   const ctrl = new AbortController();
@@ -572,6 +579,8 @@ const ctx = {
   saveShipping, restoreStock, onOrdersChange: (fn) => orderListeners.push(fn),
   refreshCatalog: () => { renderCounts(); renderProducts(); }, pruneCart,
   isSold, unavailable, addToCart, addBundle,
+  baseT, setTextOverrides: (map) => { OVERRIDES = map && typeof map === 'object' ? { ...map } : {}; },
+  refreshHeading: () => { $('#catalog-heading').textContent = t('heading.' + state.category); },
 };
 const ordersUI = initOrders(ctx);
 const sellersUI = initSellers(ctx);
@@ -584,8 +593,10 @@ const contactUI = initContact(ctx);
 ctx.contact = contactUI;
 const castingUI = initCasting(ctx);
 ctx.casting = castingUI;
-initBrands(ctx);
-initStores(ctx);
+ctx.brands = initBrands(ctx);
+ctx.stores = initStores(ctx);
+const siteEditor = initSiteEditor(ctx);
+ctx.siteEditor = siteEditor;
 const inboxUI = initInbox(ctx);
 ctx.inbox = inboxUI;
 const adminUI = initAdmin(ctx);
@@ -646,6 +657,7 @@ async function boot() {
   $('#catalog-heading').textContent = t('heading.all');
   startCountdown();
   await catalogAdmin.load();
+  await siteEditor.load();
   await sellersUI.load();
   await contactUI.load();
   await castingUI.load();
