@@ -1,7 +1,7 @@
 // Feature: visitor/buyer messages (no order needed) + admin "Inbox" tab that also lists order chats.
 const KEY = 'bv_inbox';
 const MINE_KEY = 'bv_inbox_mine';
-const TOPICS = ['product', 'sizing', 'delivery', 'selling', 'other'];
+const TOPICS = ['product', 'sizing', 'delivery', 'watch', 'model', 'store', 'selling', 'other'];
 const ICON_CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
 const ICON_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
 const ICON_CHAT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>';
@@ -66,7 +66,11 @@ export function initInbox(ctx) {
         </div>
         <p id="msg-error" class="form-error" role="alert" hidden></p>
         <button id="msg-submit" class="btn btn-primary btn-lg btn-block" type="submit">${esc(t('inbox.send'))}</button>
-        <a id="msg-wa" class="btn btn-outline btn-block" target="_blank" rel="noopener noreferrer">${esc(t('inbox.waInstead'))}</a>
+        <p class="small muted center" id="msg-alt-note" hidden>${esc(t('inbox.altNote'))}</p>
+        <div class="contact-actions">
+          <a id="msg-tg" class="btn btn-tg btn-sm" target="_blank" rel="noopener noreferrer" hidden>${esc(t('inbox.tgInstead'))}</a>
+          <a id="msg-wa" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer" hidden>${esc(t('inbox.waInstead'))}</a>
+        </div>
       </form>
       <div id="msg-thread" hidden>
         <button id="msg-thread-back" class="link-btn back-link" type="button">${ICON_BACK}<span>${esc(t('inbox.back'))}</span></button>
@@ -237,18 +241,24 @@ export function initInbox(ctx) {
       if (renderMineList()) show('list');
     }
   }
-  function openForm() {
+  function openForm(preset) {
     visitorId = null;
     const buyer = state.buyer || {};
     const name = $('#msg-name'); const contact = $('#msg-contact');
     if (!name.value) name.value = buyer.name || '';
     if (!contact.value) contact.value = buyer.phone || buyer.email || '';
+    if (preset?.topic && TOPICS.includes(preset.topic)) $('#msg-topic').value = preset.topic;
+    if (preset?.text) $('#msg-text').value = preset.text;
     $('#msg-error').hidden = true;
     $('#msg-form-back').hidden = !mine.length;
-    const wa = ctx.contact?.publicLinks(t('inbox.waText'))?.wa || '';
-    $('#msg-wa').hidden = !wa;
-    if (wa) $('#msg-wa').href = wa;
+    const links = ctx.contact?.publicLinks(t('inbox.waText')) || {};
+    $('#msg-tg').hidden = !links.tg;
+    if (links.tg) $('#msg-tg').href = links.tg;
+    $('#msg-wa').hidden = !links.wa;
+    if (links.wa) $('#msg-wa').href = links.wa;
+    $('#msg-alt-note').hidden = !links.tg && !links.wa;
     show('form');
+    if (preset) setTimeout(() => (name.value ? $('#msg-text') : name).focus(), 50);
   }
   function openThread(id) { visitorId = id; show('thread'); renderVisitor(); }
   function open() {
@@ -256,8 +266,14 @@ export function initInbox(ctx) {
     visitorId = null;
     if (renderMineList()) show('list'); else openForm();
   }
+  // Any part of the store can open a ready-made message straight to the admin inbox.
+  function compose(preset = {}) {
+    ctx.openDialog(dialog);
+    openForm(preset);
+  }
+  window.addEventListener('bv:compose', (e) => compose(e.detail || {}));
 
-  $('#msg-new').addEventListener('click', openForm);
+  $('#msg-new').addEventListener('click', () => openForm());
   $('#msg-form-back').addEventListener('click', () => { renderMineList(); show('list'); });
   $('#msg-thread-back').addEventListener('click', () => { visitorId = null; if (renderMineList()) show('list'); else openForm(); });
   $('#msg-mine-list').addEventListener('click', (e) => {
@@ -402,5 +418,5 @@ export function initInbox(ctx) {
 
   ctx.onOrdersChange(() => renderAll());
 
-  return { load, open, renderAdmin, unread: adminUnread };
+  return { load, open, compose, renderAdmin, unread: adminUnread };
 }
