@@ -510,7 +510,7 @@ function seedOrders() {
       { id: 'bv-09', name: PRODUCTS[8].name, image: PRODUCTS[8].image, shade: 'Havana Tortoise', qty: 1, priceUsd: 26 },
     ],
     subtotalUsd: 60, shippingUsd: 8, discountUsd: 0, totalUsd: 68,
-    customer: { name: 'Amara Okafor', email: 'amara@email.com', phone: '+234 801 234 5678' },
+    customer: { name: 'Amara Okafor', email: 'amara@email.com', phone: '' },
     shipping: { address: '14 Adeola Odeku St, Victoria Island', city: 'Lagos', country: 'Nigeria', methodId: 'lagos-same-day', methodName: 'Lagos Same-Day Courier', carrier: '', tracking: '' },
     note: '',
     messages: [
@@ -538,6 +538,12 @@ async function loadState() {
   } else {
     const parsed = parse(ordersRaw, []);
     state.orders = Array.isArray(parsed) ? parsed : [];
+    // Remove the old fake sample phone so "WhatsApp the buyer" never opens it.
+    let cleaned = false;
+    state.orders.forEach((o) => {
+      if (o?.customer && String(o.customer.phone || '').replace(/\D/g, '') === '2348012345678') { o.customer.phone = ''; cleaned = true; }
+    });
+    if (cleaned) await saveOrders();
     lastOrdersRaw = JSON.stringify(state.orders);
   }
   state.currency = currency === 'NGN' ? 'NGN' : 'USD';
