@@ -663,3 +663,26 @@ a.btn-outline { text-decoration: none; }
   .stores-head .pills { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--s4) * -1); padding: 0 var(--s4); }
   .stores-head .pill { flex-shrink: 0; }
 }
+
+/* Visitor messages: floating "Message us" button + admin inbox */
+.fab-msg {
+  position: fixed; right: var(--s4); bottom: var(--s4); z-index: 35;
+  display: inline-flex; align-items: center; gap: var(--s2);
+  min-height: 52px; padding: 0 var(--s5) 0 var(--s4); border: 0; border-radius: var(--r-full);
+  background: var(--espresso); color: var(--ivory); font: 600 14px var(--font-sans);
+  box-shadow: var(--shadow); cursor: pointer; transition: transform .2s var(--ease), background .2s;
+}
+.fab-msg:hover { background: var(--rosewood); transform: translateY(-2px); }
+.fab-msg:focus-visible { outline: 2px solid var(--champagne); outline-offset: 3px; }
+.fab-msg svg { width: 22px; height: 22px; fill: none; stroke: var(--champagne); stroke-width: 1.7; stroke-linejoin: round; }
+.fab-msg .count-badge { position: absolute; top: -4px; right: -4px; }
+.ib-actions { flex-wrap: wrap; margin: var(--s3) 0; }
+#login-pass { flex: 1; min-width: 0; }
+#login-show { min-height: 44px; flex-shrink: 0; }
+.ib-actions .btn { text-decoration: none; }
+#msg-dialog .modal-body > * + * { margin-top: var(--s3); }
+#msg-list-view { display: flex; flex-direction: column; gap: var(--s3); }
+@media (max-width: 719px) {
+  .fab-msg { bottom: calc(72px + env(safe-area-inset-bottom)); right: var(--s3); min-height: 48px; width: 48px; padding: 0; justify-content: center; }
+  .fab-msg .fab-label { display: none; }
+}
