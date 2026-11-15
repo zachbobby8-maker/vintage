@@ -71,10 +71,11 @@ export function initCasting(ctx) {
 
   /* ---------- public ---------- */
   function renderPublic() {
-    const wa = ctx.contact?.publicLinks(t('casting.waText'))?.wa || '';
+    // Main button sends the application straight to the admin. Telegram is an optional extra.
+    const tg = ctx.contact?.publicLinks(t('casting.waText'))?.tg || '';
     const link = $('#casting-wa');
-    link.hidden = !wa;
-    if (wa) link.href = wa;
+    link.hidden = !tg;
+    if (tg) link.href = tg;
     const latest = apps.filter((a) => mine.includes(a.id)).sort((a, b) => b.createdAt - a.createdAt)[0];
     const note = $('#casting-mine');
     note.hidden = !latest;
@@ -172,7 +173,7 @@ export function initCasting(ctx) {
 
   function card(a) {
     const initials = String(a.name || '?').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-    const meta = [t('casting.ageN', { n: a.age }), t('casting.' + a.gender), a.city, a.height].filter(Boolean).join(' · ');
+    const meta = [t('casting.ageN', { n: a.age }), t('casting.' + a.gender), a.city, a.height].filter(Boolean).join(', ');
     const wa = ctx.contact?.phoneLink(a.phone, t('casting.waToModel', { name: a.name })) || '';
     const ig = String(a.instagram || '').replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
     return `<article class="model-card">
@@ -180,7 +181,7 @@ export function initCasting(ctx) {
       <div class="model-body">
         <div class="row-between"><p class="order-row-title">${esc(a.name)}</p><span class="status-chip status-${CHIP[a.status] || 'placed'}">${esc(t('casting.status.' + a.status))}</span></div>
         <p class="small muted">${esc(meta)}</p>
-        <p class="small">${esc(a.phone)}${ig ? ` · <a class="footer-link" href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener noreferrer">@${esc(ig)}</a>` : ''}</p>
+        <p class="small">${esc(a.phone)}${ig ? `, <a class="footer-link" href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener noreferrer">@${esc(ig)}</a>` : ''}</p>
         ${a.message ? `<p class="small model-msg">${esc(a.message)}</p>` : ''}
         <p class="small muted">${esc(t('casting.appliedOn', { date: formatDate(a.createdAt, true), id: a.id }))}</p>
         <div class="model-actions">
