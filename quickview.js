@@ -1,6 +1,9 @@
 // Feature: extensive product detail view (gallery, story, specs, care, provenance, shipping).
 import { findProduct, BUNDLE } from './products.js';
 
+// Swap "·" separators in product text for commas (also fixes saved products).
+const tidy = (value) => String(value ?? '').replace(/\s*·\s*/g, ', ');
+
 export function initQuickView(ctx) {
   const { t, esc, fmt, state } = ctx;
   const $ = (sel) => document.querySelector(sel);
@@ -39,7 +42,7 @@ export function initQuickView(ctx) {
   function renderShipping() {
     const s = state.shipping || {};
     const methods = s.methods || [];
-    const rows = methods.map((m) => `<li><span class="strong">${esc(m.name)}</span> · ${esc(m.eta || '')} · ${esc(fmt(Number(m.priceUsd) || 0))}</li>`);
+    const rows = methods.map((m) => `<li><span class="strong">${esc(m.name)}</span>: ${esc([m.eta, fmt(Number(m.priceUsd) || 0)].filter(Boolean).join(', '))}</li>`);
     if (Number(s.freeThresholdUsd) > 0) rows.push(`<li>${esc(t('qv.freeOver', { amount: fmt(Number(s.freeThresholdUsd)) }))}</li>`);
     if (s.dispatchNote) rows.push(`<li>${esc(s.dispatchNote)}</li>`);
     $('#qv-ship-list').innerHTML = rows.join('');
@@ -56,7 +59,7 @@ export function initQuickView(ctx) {
     const stock = $('#qv-stock');
     stock.textContent = stockText(p);
     stock.hidden = !stock.textContent;
-    $('#qv-era').textContent = p.era || '';
+    $('#qv-era').textContent = tidy(p.era);
     $('#qv-name').textContent = p.name;
     $('#qv-price').textContent = fmt(p.priceUsd);
     const compare = $('#qv-compare');
@@ -69,7 +72,7 @@ export function initQuickView(ctx) {
     const highlights = Array.isArray(p.highlights) ? p.highlights : [];
     hl.hidden = !highlights.length;
     hl.innerHTML = highlights.map((h) => `<li>${esc(h)}</li>`).join('');
-    $('#qv-measure').textContent = p.measurements || t('common.none');
+    $('#qv-measure').textContent = tidy(p.measurements) || t('common.none');
     const fit = $('#qv-fit');
     fit.textContent = p.fit || '';
     fit.hidden = !p.fit;
