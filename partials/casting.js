@@ -4,7 +4,7 @@ export default `
     <form id="casting-form" class="modal-card" novalidate>
       <div class="modal-head dark">
         <div>
-          <p class="eyebrow gold" data-i18n="casting.dlgEyebrow">Model casting · Ages 18–22</p>
+          <p class="eyebrow gold" data-i18n="casting.dlgEyebrow">Model casting, ages 18–22</p>
           <h3 id="cast-title" class="display h3" data-i18n="casting.dlgTitle">Apply to model for Braid Vintage</h3>
         </div>
         <button class="close-btn close-btn-dark" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
@@ -26,7 +26,7 @@ export default `
             </div>
             <div class="field"><label for="cast-city" data-i18n="casting.city">City</label><input id="cast-city" class="input" maxlength="60" data-i18n-placeholder="field.cityPh" placeholder="Lagos" /></div>
             <div class="field"><label for="cast-height" data-i18n="casting.height">Height (optional)</label><input id="cast-height" class="input" maxlength="20" data-i18n-placeholder="casting.heightPh" placeholder="175 cm" /></div>
-            <div class="field"><label for="cast-phone" data-i18n="casting.phone">WhatsApp number</label><input id="cast-phone" class="input" type="tel" inputmode="tel" maxlength="30" data-i18n-placeholder="field.phonePh" placeholder="+234 801 234 5678" /></div>
+            <div class="field"><label for="cast-phone" data-i18n="casting.phone">WhatsApp number</label><input id="cast-phone" class="input" type="tel" inputmode="tel" maxlength="30" data-i18n-placeholder="field.phonePh" placeholder="Your phone number with country code" /></div>
             <div class="field"><label for="cast-ig" data-i18n="casting.instagram">Instagram (optional)</label><input id="cast-ig" class="input" maxlength="40" placeholder="@username" /></div>
           </div>
           <div class="pe-photo">
