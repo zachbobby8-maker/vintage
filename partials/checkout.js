@@ -37,7 +37,7 @@ export default `
           <legend data-i18n="chk.payment">Payment</legend>
           <div class="seg seg-lg">
             <button id="rail-fiat" class="seg-btn is-active" type="button" data-rail="fiat" aria-pressed="true" data-i18n="chk.railFiat">Card / Paystack</button>
-            <button id="rail-braid" class="seg-btn" type="button" data-rail="braid" aria-pressed="false" data-i18n="chk.railBraid">$BRAID wallet · 5% off</button>
+            <button id="rail-braid" class="seg-btn" type="button" data-rail="braid" aria-pressed="false" data-i18n="chk.railBraid">$BRAID wallet (5% off)</button>
           </div>
           <p id="rail-panel-fiat" class="rail-panel small" data-i18n="chk.fiatText">Visa, Mastercard, Apple Pay and Paystack (NGN/USD). Same-day courier in Lagos.</p>
           <p id="rail-panel-braid" class="rail-panel rail-dark small" hidden data-i18n="chk.braidText">Settle from BraidWallet, Ledger or MetaMask. Holders get 5% off.</p>
@@ -54,7 +54,15 @@ export default `
           <p id="chk-tokens" class="small muted right" hidden></p>
         </div>
         <p id="chk-error" class="form-error" role="alert" hidden></p>
+        <label class="check-card">
+          <input type="checkbox" id="chk-send-wa" checked />
+          <span>
+            <strong data-i18n="chk.sendWaTitle">Also send my order to the merchant</strong>
+            <span class="small muted block" data-i18n="chk.sendWaText">Opens WhatsApp (or Telegram) with your order details ready to send, so the merchant sees it straight away.</span>
+          </span>
+        </label>
         <button id="chk-submit" class="btn btn-primary btn-lg btn-block" type="submit" data-i18n="chk.submit">Confirm & place order</button>
+        <button id="chk-ask" class="btn btn-outline btn-block" type="button" data-i18n="chk.ask">Ask the merchant before paying</button>
       </div>
     </form>
   </dialog>
