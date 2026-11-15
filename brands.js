@@ -38,12 +38,17 @@ export function initBrands(ctx) {
     if (!el) return;
     el.innerHTML = list.map((b) => `<li class="brand-chip"><span class="brand-name">${esc(b.name)}</span><span class="brand-note">${esc(b.note)}</span></li>`).join('');
   };
-  render('#brands-beauty', BEAUTY_BRANDS);
-  render('#brands-hair', HAIR_BRANDS);
+  const renderAll = () => {
+    render('#brands-beauty', BEAUTY_BRANDS);
+    render('#brands-hair', HAIR_BRANDS);
+  };
+  renderAll();
 
   // "We buy women's watches": open a ready-made message that goes straight to the admin inbox.
   const sellBtn = document.querySelector('#watch-sell');
   sellBtn?.addEventListener('click', () => {
     window.dispatchEvent(new CustomEvent('bv:compose', { detail: { topic: 'watch', text: ctx.t('watch.waText') } }));
   });
+
+  return { render: renderAll };
 }
