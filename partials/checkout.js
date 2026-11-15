@@ -55,10 +55,10 @@ export default `
         </div>
         <p id="chk-error" class="form-error" role="alert" hidden></p>
         <label class="check-card">
-          <input type="checkbox" id="chk-send-wa" checked />
+          <input type="checkbox" id="chk-send-wa" />
           <span>
-            <strong data-i18n="chk.sendWaTitle">Also send my order to the merchant</strong>
-            <span class="small muted block" data-i18n="chk.sendWaText">Opens WhatsApp (or Telegram) with your order details ready to send, so the merchant sees it straight away.</span>
+            <strong data-i18n="chk.sendWaTitle">Also ping the merchant on Telegram (optional)</strong>
+            <span class="small muted block" data-i18n="chk.sendWaText">Your order already goes straight to the merchant's inbox. Tick this only if you also want to open Telegram.</span>
           </span>
         </label>
         <button id="chk-submit" class="btn btn-primary btn-lg btn-block" type="submit" data-i18n="chk.submit">Confirm & place order</button>
