@@ -344,6 +344,15 @@ export function initAdmin(ctx) {
     $('#m-orders').textContent = String(live.length);
     $('#m-aov').textContent = fmt(live.length ? revenue / live.length : 0);
     $('#m-open').textContent = String(state.orders.filter((o) => o.status === 'placed' || o.status === 'processing').length);
+    // House treasury: 70.2% blended net margin, 65% of net profit swept to the $BRAID vault.
+    const MARGIN = 0.702; const SWEEP = 0.65; const BRAID_USD = 0.42;
+    const net = revenue * MARGIN;
+    const sweep = net * SWEEP;
+    $('#tr-gross').textContent = fmt(revenue);
+    $('#tr-margin').textContent = `${(MARGIN * 100).toFixed(1)}%`;
+    $('#tr-net').textContent = fmt(net);
+    $('#tr-sweep').textContent = fmt(sweep);
+    $('#tr-braid').textContent = t('treasury.braid', { n: (sweep / BRAID_USD).toLocaleString('en-US', { maximumFractionDigits: 2 }) });
   }
 
   $('#admin-restock').addEventListener('click', async () => {
