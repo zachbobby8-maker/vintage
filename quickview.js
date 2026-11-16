@@ -91,6 +91,10 @@ export function initQuickView(ctx) {
     const addBtn = $('#qv-add');
     addBtn.disabled = unav;
     addBtn.textContent = unav ? t(ctx.isSold(p) ? 'card.soldOut' : 'card.inBag') : t('qv.add');
+    // Wigs offer the silk bonnet; everything else offers the vanity bundle.
+    const isWig = p.category === 'wigs';
+    $('#qv-bonnet-wrap').hidden = !isWig;
+    $('#qv-bundle-wrap').hidden = isWig;
   }
 
   function open(id) {
@@ -98,6 +102,7 @@ export function initQuickView(ctx) {
     if (!p || p === BUNDLE) return;
     currentId = id;
     $('#qv-bundle').checked = true;
+    $('#qv-bonnet').checked = true;
     render();
     dialog.querySelector('.qv')?.scrollTo?.(0, 0);
     ctx.openDialog(dialog);
@@ -115,7 +120,8 @@ export function initQuickView(ctx) {
     const p = findProduct(currentId);
     if (!p) return;
     ctx.addToCart(currentId, p.shades ? $('#qv-shade').value : null, false);
-    if ($('#qv-bundle').checked) ctx.addBundle(false);
+    if (p.category === 'wigs') { if ($('#qv-bonnet').checked) ctx.addBonnet(false); }
+    else if ($('#qv-bundle').checked) ctx.addBundle(false);
     ctx.closeDialog(dialog);
     ctx.openDialog($('#cart-dialog'));
   });
