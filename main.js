@@ -1,4 +1,4 @@
-import { PRODUCTS, BUNDLE, findProduct, allProducts } from './products.js';
+import { PRODUCTS, BUNDLE, BONNET, findProduct, allProducts } from './products.js';
 import { initOrders } from './orders.js';
 import { initAdmin } from './admin.js';
 import { initSellers } from './sellers.js';
@@ -239,6 +239,7 @@ function renderProducts() {
         <h3 class="card-title"><button class="link-btn" type="button" data-qv="${p.id}">${esc(p.name)}</button></h3>
         <p class="card-desc">${esc(tidy(p.measurements))}</p>
         ${!sold && !p.oneOfOne && p.stock != null && p.stock <= 5 ? `<p class="stock-note">${esc(t('qv.onlyLeft', { n: p.stock }))}</p>` : ''}
+        ${p.category === 'wigs' && !unav ? `<button class="bonnet-chip" type="button" data-wig-bonnet="${p.id}">${esc(t('bonnet.cardAdd', { price: fmt(BONNET.priceUsd) }))}</button>` : ''}
         <div class="card-foot"><span class="price-wrap"><span class="price">${esc(fmt(p.priceUsd))}</span>${p.compareUsd > p.priceUsd ? `<span class="strike">${esc(fmt(p.compareUsd))}</span>` : ''}</span>
           <button class="btn btn-primary btn-sm" type="button" data-add="${p.id}" ${unav ? 'disabled' : ''}>${esc(label)}</button></div>
       </div></article>`;
@@ -271,6 +272,11 @@ function addToCart(id, shade, openBag = true) {
 }
 function addBundle(openBag = true) {
   addToCart(BUNDLE.id, BUNDLE.variant, false);
+  if (openBag) openDialog($('#cart-dialog'));
+}
+// House Archive: 22-momme silk bonnet add-on (offered with every wig).
+function addBonnet(openBag = true) {
+  addToCart(BONNET.id, BONNET.variant, false);
   if (openBag) openDialog($('#cart-dialog'));
 }
 function renderCart() {
@@ -461,6 +467,7 @@ async function submitCheckout(e) {
 /* ---------- currency, shipping, countdown ---------- */
 function renderPriceLabels() {
   $$('.bundle-price').forEach((el) => { el.textContent = fmt(BUNDLE.priceUsd); });
+  $$('.bonnet-price').forEach((el) => { el.textContent = fmt(BONNET.priceUsd); });
   $('#bundle-compare').textContent = t('bundle.compare', { amount: fmt(BUNDLE.compareUsd) });
   $('#announce-ship').textContent = t('announce.freeShip', { amount: fmt(Number(state.shipping.freeThresholdUsd) || 0) });
 }
@@ -578,7 +585,7 @@ const ctx = {
   load, loadRaw, save, remove, saveOrders, updateOrder, addMessage, renderChat, statusChip, attachFallbacks,
   saveShipping, restoreStock, onOrdersChange: (fn) => orderListeners.push(fn),
   refreshCatalog: () => { renderCounts(); renderProducts(); }, pruneCart,
-  isSold, unavailable, addToCart, addBundle,
+  isSold, unavailable, addToCart, addBundle, addBonnet,
   baseT, setTextOverrides: (map) => { OVERRIDES = map && typeof map === 'object' ? { ...map } : {}; },
   refreshHeading: () => { $('#catalog-heading').textContent = t('heading.' + state.category); },
 };
@@ -604,7 +611,7 @@ ctx.admin = adminUI;
 
 function bindEvents() {
   document.addEventListener('click', (e) => {
-    const el = e.target.closest('[data-cat],[data-jump],[data-qv],[data-add],[data-inc],[data-dec],[data-remove],.js-add-bundle,[data-close],[data-rail]');
+    const el = e.target.closest('[data-cat],[data-jump],[data-qv],[data-add],[data-inc],[data-dec],[data-remove],.js-add-bundle,.js-add-bonnet,[data-wig-bonnet],[data-close],[data-rail]');
     if (!el) return;
     if (el.matches('[data-close]')) { closeDialog(el.closest('dialog')); return; }
     if (el.dataset.cat) { setCategory(el.dataset.cat); return; }
@@ -615,6 +622,8 @@ function bindEvents() {
     if (el.dataset.dec) { changeQty(+el.dataset.dec, -1); return; }
     if (el.dataset.remove) { changeQty(+el.dataset.remove, -Infinity); return; }
     if (el.dataset.rail) { setRail(el.dataset.rail); return; }
+    if (el.dataset.wigBonnet) { addToCart(el.dataset.wigBonnet, null, false); addBonnet(true); return; }
+    if (el.matches('.js-add-bonnet')) { addBonnet(true); return; }
     if (el.matches('.js-add-bundle')) addBundle(true);
   });
   $$('dialog').forEach((d) => d.addEventListener('click', (e) => { if (e.target === d) d.close(); }));
