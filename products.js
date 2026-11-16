@@ -1,5 +1,7 @@
 // Catalog data. Tag types: archive (1-of-1), sealed, essential, partner.
 // Store products are editable by the admin (see catalog-admin.js); PRODUCTS is the first-run seed.
+import { HOUSE_PRODUCTS, BONNET } from './products-house.js';
+export { BONNET };
 const U = (id, w = 800) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 const P = (bg, fg, text) => `https://placehold.co/600x750/${bg}/${fg}?text=${encodeURIComponent(text)}`;
 export const placeholderImage = (text) => P('F3EDE3', '1A1715', text || 'BraidVintage');
@@ -8,10 +10,10 @@ export const PRODUCTS = [
   {
     id: 'bv-01', sku: 'BV-CT-9401', category: 'couture', tag: 'archive', oneOfOne: true, priceUsd: 380, compareUsd: 520,
     name: '1994 Milan Silk Bias Slip Dress',
-    era: 'Autumn 1994 · Milan',
+    era: 'Autumn 1994, Milan',
     description: 'A liquid bias-cut slip from a 1994 Milanese atelier, cut on the cross-grain so it skims and moves with the body. Cowl neckline, fine adjustable straps and a softly flared hem that pools just above the ankle.',
     highlights: ['True bias cut — drapes without clinging', 'Original adjustable hardware straps', 'Fully finished French seams inside'],
-    measurements: 'Bust 34" · Waist 27" · Hip 37" · Length 46" (fits S/M)',
+    measurements: 'Bust 34", Waist 27", Hip 37", Length 46" (fits S/M)',
     fit: 'Model is 5\'8" and a UK 8. Bias cut gives 1–2" of natural stretch. Size up if between sizes or prefer a looser fall.',
     materials: '100% heavyweight Italian silk charmeuse. Metal slider hardware.',
     condition: 'Museum grade (9.8/10). No stains, pulls or odours. Hem professionally re-pressed.',
@@ -23,10 +25,10 @@ export const PRODUCTS = [
   {
     id: 'bv-02', sku: 'BV-CT-8802', category: 'couture', tag: 'archive', oneOfOne: true, priceUsd: 295, compareUsd: null,
     name: '1980s Sculpted Wool Blazer',
-    era: '1988 · Paris Archive',
+    era: '1988, Paris Archive',
     description: 'Powerful late-80s tailoring with a nipped hourglass waist, strong padded shoulders and satin peak lapels. Wear it buttoned as a top or open over a slip dress.',
     highlights: ['Hourglass waist seaming', 'Satin peak lapels', 'Self-covered buttons'],
-    measurements: 'Shoulder 16.5" · Bust 36" · Cinched waist 28" · Length 27" (fits M)',
+    measurements: 'Shoulder 16.5", Bust 36", Cinched waist 28", Length 27" (fits M)',
     fit: 'Structured fit through the waist. Shoulder pads are removable by a tailor for a softer line.',
     materials: 'Outer: 100% virgin wool gabardine. Lapels: silk satin. Lining: cupro.',
     condition: 'Archival mint (9.5/10). Lining immaculate; one tiny professional repair at inner pocket.',
@@ -38,10 +40,10 @@ export const PRODUCTS = [
   {
     id: 'bv-03', sku: 'BV-CT-9603', category: 'couture', tag: 'archive', oneOfOne: true, priceUsd: 210, compareUsd: null,
     name: '1990s Burgundy Velvet Corset Top',
-    era: '1996 · French Couture',
+    era: '1996, French Couture',
     description: 'A deep burgundy velvet corset with a sweetheart neckline and a lace-up back for a custom fit. Pairs beautifully with wide trousers or a silk slip skirt.',
     highlights: ['Adjustable lace-up back', 'Internal boning for shape', 'Hidden side zip'],
-    measurements: 'Bust 32–34" · Waist 25–27" · Length 15"',
+    measurements: 'Bust 32–34", Waist 25–27", Length 15"',
     fit: 'Adjustable by 2" through the lacing. Best for XS–S.',
     materials: 'Silk-rayon velvet, cotton lining, spiral steel boning.',
     condition: 'Excellent vintage (9.4/10). Pile full and even; very light wear at one lace eyelet.',
@@ -53,10 +55,10 @@ export const PRODUCTS = [
   {
     id: 'bv-04', sku: 'BV-BG-9804', category: 'bags', tag: 'archive', oneOfOne: true, priceUsd: 440, compareUsd: 600,
     name: '1998 Monogram Baguette Shoulder Bag',
-    era: '1998 · Rome Leather',
+    era: '1998, Rome Leather',
     description: 'The bag that defined the late 90s: a compact monogram canvas baguette with calfskin trim and a brushed gold clasp, worn tucked under the arm.',
     highlights: ['Brushed gold clasp', 'Calfskin trim and strap', 'Interior slip pocket'],
-    measurements: 'W 10.2" · H 5.5" · D 1.8" · Strap drop 7.5"',
+    measurements: 'W 10.2", H 5.5", D 1.8", Strap drop 7.5"',
     fit: 'Fits a phone, cardholder, keys and a lipstick.',
     materials: 'Coated monogram canvas, calfskin leather, gold-tone hardware, satin lining.',
     condition: 'Authenticated (9.6/10). Corners crisp; light patina on strap; clean lining.',
@@ -68,10 +70,10 @@ export const PRODUCTS = [
   {
     id: 'bv-05', sku: 'BV-BG-9205', category: 'bags', tag: 'archive', oneOfOne: true, priceUsd: 350, compareUsd: null,
     name: 'Quilted Lambskin Gold Chain Clutch',
-    era: '1992 · Parisian Evening',
+    era: '1992, Parisian Evening',
     description: 'Diamond-quilted lambskin evening clutch with a turn-lock closure and a slim gold chain you can tuck inside or wear on the shoulder.',
     highlights: ['Turn-lock closure', 'Removable gold-plated chain', 'Lambskin quilting'],
-    measurements: 'W 9.0" · H 5.0" · D 1.5" · Chain drop 19"',
+    measurements: 'W 9.0", H 5.0", D 1.5", Chain drop 19"',
     fit: 'Holds a phone, cards and a compact.',
     materials: 'Lambskin leather, gold-plated chain and hardware, grosgrain lining.',
     condition: 'Pristine (9.7/10). Quilting plump; hardware bright with minimal scratches.',
@@ -146,7 +148,7 @@ export const PRODUCTS = [
     era: '1970s Rococo revival',
     description: 'A restored 1970s brass vanity mirror with ornate filigree, a weighted base and a swivel frame with one standard and one magnifying side.',
     highlights: ['Dual-sided: 1× and 3× magnification', 'Weighted, non-slip base', 'Hand-restored brass'],
-    measurements: 'Height 13.5" · Mirror diameter 7"',
+    measurements: 'Height 13.5", Mirror diameter 7"',
     fit: 'Sized for a dressing table or bathroom counter.',
     materials: 'Solid brass frame, bevelled glass.',
     condition: 'Restored vintage. Warm antique patina; glass flawless.',
@@ -158,10 +160,10 @@ export const PRODUCTS = [
   {
     id: 'bv-11', sku: 'BV-WG-0011', category: 'wigs', tag: 'essential', oneOfOne: false, priceUsd: 189, compareUsd: 240,
     name: 'Bone-Straight 13×4 HD Lace Frontal Wig',
-    era: '100% human hair · 26 inch',
+    era: '100% human hair, 26 inch',
     description: 'Glass-sleek bone-straight hair on an invisible HD lace that melts into every skin tone. Pre-plucked hairline with baby hairs, bleached knots and a full, even density from root to tip.',
     highlights: ['HD lace — melts on all skin tones', 'Pre-plucked hairline with baby hairs', 'Can be dyed, curled and straightened'],
-    measurements: '26" length · 13×4 frontal · 200% density · Medium cap (22.5")',
+    measurements: '26" length, 13×4 frontal, 200% density, Medium cap (22.5")',
     fit: 'Adjustable straps and 4 combs. Medium cap fits most heads; message us for small or large caps.',
     materials: '100% virgin human hair, Swiss HD lace, breathable mesh cap.',
     condition: 'Brand new, sealed in a satin bag with wig cap and edge band.',
@@ -173,10 +175,10 @@ export const PRODUCTS = [
   {
     id: 'bv-12', sku: 'BV-WG-0012', category: 'wigs', tag: 'essential', oneOfOne: false, priceUsd: 165, compareUsd: 210,
     name: 'Honey-Blonde Body Wave Glueless Wig',
-    era: 'Wear & go · 24 inch',
+    era: 'Wear & go, 24 inch',
     description: 'Soft, bouncy body waves in a rich honey-blonde balayage with a darker root. Fully glueless — put it on in under a minute, no glue, no gel.',
     highlights: ['Glueless wear & go', 'Hand-dyed balayage with shadow root', 'Pre-cut lace'],
-    measurements: '24" length · 6×5 closure · 180% density · Medium cap',
+    measurements: '24" length, 6×5 closure, 180% density, Medium cap',
     fit: 'Elastic band plus adjustable straps for a secure, glue-free fit.',
     materials: '100% human hair, transparent pre-cut lace.',
     condition: 'Brand new, sealed.',
@@ -188,10 +190,10 @@ export const PRODUCTS = [
   {
     id: 'bv-13', sku: 'BV-WG-0013', category: 'wigs', tag: 'essential', oneOfOne: false, priceUsd: 120, compareUsd: null,
     name: '90s Bouncy Layered Bob Wig',
-    era: 'Supermodel blowout · 12 inch',
+    era: 'Supermodel blowout, 12 inch',
     description: 'The 90s supermodel blowout, ready to wear: face-framing layers with a curled-under bounce and plenty of volume at the crown.',
     highlights: ['Pre-styled bouncy layers', 'Face-framing curtain bangs', 'Lightweight for all-day wear'],
-    measurements: '12" length · 5×5 closure · 180% density',
+    measurements: '12" length, 5×5 closure, 180% density',
     fit: 'Medium cap with adjustable band. Style with a round brush to refresh.',
     materials: 'Human hair blend, HD closure lace.',
     condition: 'Brand new, sealed.',
@@ -203,10 +205,10 @@ export const PRODUCTS = [
   {
     id: 'bv-14', sku: 'BV-WG-0014', category: 'wigs', tag: 'essential', oneOfOne: false, priceUsd: 145, compareUsd: null,
     name: 'Knotless Boho Braided Lace Wig',
-    era: 'Hand-braided · 30 inch',
+    era: 'Hand-braided, 30 inch',
     description: 'Weeks of salon braids without the sitting: hand-knotted boho knotless braids with loose curly pieces, on a full lace cap you can part anywhere.',
     highlights: ['Hand-braided full lace', 'Loose boho curls throughout', 'Part anywhere'],
-    measurements: '30" length · Full lace · Medium cap',
+    measurements: '30" length, Full lace, Medium cap',
     fit: 'Lightweight for braids. Adjustable straps; no glue needed.',
     materials: 'Premium synthetic braids, human-hair boho curls, full lace cap.',
     condition: 'Brand new, hand-made to order.',
@@ -218,10 +220,10 @@ export const PRODUCTS = [
   {
     id: 'bv-15', sku: 'BV-WG-0015', category: 'wigs', tag: 'essential', oneOfOne: false, priceUsd: 98, compareUsd: null,
     name: 'Kinky Coily 4C Afro Unit',
-    era: 'Natural texture · 16 inch',
+    era: 'Natural texture, 16 inch',
     description: 'A full, soft afro that matches 4C natural hair perfectly. Big, defined coils with a natural kinky-edge hairline.',
     highlights: ['Matches 4C natural texture', 'Kinky edges for a natural hairline', 'Big volume, light cap'],
-    measurements: '16" stretched · 4×4 closure · 250% density',
+    measurements: '16" stretched, 4×4 closure, 250% density',
     fit: 'Medium cap with combs and straps.',
     materials: 'Human hair, Swiss lace closure.',
     condition: 'Brand new, sealed.',
@@ -233,10 +235,10 @@ export const PRODUCTS = [
   {
     id: 'bv-16', sku: 'BV-WG-0016', category: 'wigs', tag: 'essential', oneOfOne: false, priceUsd: 85, compareUsd: 110,
     name: 'Cherry-Red Pixie Cut Wig',
-    era: 'Bold short cut · 6 inch',
+    era: 'Bold short cut, 6 inch',
     description: 'A daring cherry-red pixie with a tapered nape and textured top. Instant runway energy — no cutting, no dye.',
     highlights: ['Tapered, pre-cut shape', 'Rich cherry-red colour', 'Ultra light and breathable'],
-    measurements: '6" top · Machine-made cap with lace part',
+    measurements: '6" top, Machine-made cap with lace part',
     fit: 'Small–medium cap. Stretchy and comfy.',
     materials: 'Human hair, breathable machine cap.',
     condition: 'Brand new, sealed.',
@@ -248,10 +250,10 @@ export const PRODUCTS = [
   {
     id: 'bv-17', sku: 'BV-WT-0017', category: 'watches', tag: 'archive', oneOfOne: true, priceUsd: 2450, compareUsd: 2900,
     name: 'Cartier Tank Must de Cartier Ladies, 1980s',
-    era: 'c. 1985 · Paris',
+    era: 'c. 1985, Paris',
     description: 'The quiet-luxury icon. A vermeil Tank with a cream dial, black Roman numerals and the signature blue cabochon crown, on a black lizard-grain strap. Fresh from a full service.',
     highlights: ['Signature blue sapphire cabochon crown', 'Serviced — new battery and seals', 'Original Cartier deployant-style buckle'],
-    measurements: 'Case 28 × 20.5 mm · Strap fits 14–17 cm wrist',
+    measurements: 'Case 28 × 20.5 mm, Strap fits 14–17 cm wrist',
     fit: 'Small, elegant case made for slim wrists. Extra strap holes can be added free on request.',
     materials: 'Vermeil (gold over sterling silver) case, cream dial, leather strap.',
     condition: 'Very good vintage. Light hairline marks on the case consistent with age; crystal clear.',
@@ -263,10 +265,10 @@ export const PRODUCTS = [
   {
     id: 'bv-18', sku: 'BV-WT-0018', category: 'watches', tag: 'archive', oneOfOne: true, priceUsd: 1680, compareUsd: null,
     name: 'Omega De Ville Ladies Gold-Tone, 1970s',
-    era: 'c. 1974 · Switzerland',
+    era: 'c. 1974, Switzerland',
     description: 'A 70s cocktail watch with a sunburst champagne dial and slim baton hands. Hand-wound mechanical movement — wind it every morning and listen to it tick.',
     highlights: ['Hand-wound Swiss mechanical movement', 'Champagne sunburst dial', 'Serviced and timed'],
-    measurements: 'Case 22 mm · Bracelet fits up to 16.5 cm wrist',
+    measurements: 'Case 22 mm, Bracelet fits up to 16.5 cm wrist',
     fit: 'Dainty and light. Bracelet can be shortened by a jeweller.',
     materials: 'Gold-plated case, stainless steel back, mesh bracelet.',
     condition: 'Excellent vintage. Running within ±15 seconds per day.',
@@ -278,10 +280,10 @@ export const PRODUCTS = [
   {
     id: 'bv-19', sku: 'BV-WT-0019', category: 'watches', tag: 'archive', oneOfOne: true, priceUsd: 420, compareUsd: 560,
     name: 'Gucci 1500L Bangle Watch, 1990s',
-    era: 'c. 1996 · Tom Ford era',
+    era: 'c. 1996, Tom Ford era',
     description: 'Peak 90s Gucci: a sculptural gold-plated bangle with a minimalist black dial. Slips on like jewellery and stacks beautifully with gold bracelets.',
     highlights: ['Tom Ford–era Gucci design', 'Open bangle — no clasp', 'New battery fitted'],
-    measurements: 'Dial 18 mm · Bangle inner 6 cm wide',
+    measurements: 'Dial 18 mm, Bangle inner 6 cm wide',
     fit: 'Fits wrists around 14–16 cm. Gently flexible.',
     materials: 'Gold-plated stainless steel, mineral crystal.',
     condition: 'Very good. Light wear on the inner bangle that is not visible when worn.',
@@ -293,10 +295,10 @@ export const PRODUCTS = [
   {
     id: 'bv-20', sku: 'BV-WT-0020', category: 'watches', tag: 'archive', oneOfOne: true, priceUsd: 2900, compareUsd: null,
     name: 'Rolex Oyster Perpetual Lady Datejust Two-Tone, 1989',
-    era: '1989 · Ref. 69173',
+    era: '1989, Ref. 69173',
     description: 'The forever watch. Steel and 18k yellow gold Jubilee bracelet, champagne dial and fluted gold bezel. Automatic movement — it winds itself as you wear it.',
     highlights: ['18k gold fluted bezel', 'Automatic movement, fully serviced', 'Original Jubilee bracelet'],
-    measurements: 'Case 26 mm · Bracelet fits up to 16 cm wrist',
+    measurements: 'Case 26 mm, Bracelet fits up to 16 cm wrist',
     fit: 'Classic ladies size. Spare links available.',
     materials: 'Stainless steel and 18k yellow gold, sapphire crystal.',
     condition: 'Excellent. Polished by our watchmaker; light bracelet stretch, normal for age.',
@@ -308,10 +310,10 @@ export const PRODUCTS = [
   {
     id: 'bv-21', sku: 'BV-WT-0021', category: 'watches', tag: 'archive', oneOfOne: true, priceUsd: 260, compareUsd: null,
     name: 'Seiko Ladies Mother-of-Pearl Dress Watch, 1980s',
-    era: 'c. 1983 · Japan',
+    era: 'c. 1983, Japan',
     description: 'A glowing mother-of-pearl dial with tiny gold markers on a slim gold-tone bracelet. Light, reliable and pretty enough for every day.',
     highlights: ['Real mother-of-pearl dial', 'Reliable Japanese quartz', 'New battery fitted'],
-    measurements: 'Case 20 mm · Bracelet fits 14–17 cm wrist',
+    measurements: 'Case 20 mm, Bracelet fits 14–17 cm wrist',
     fit: 'Adjustable fold-over clasp.',
     materials: 'Gold-tone case and bracelet, mother-of-pearl dial.',
     condition: 'Very good vintage with light surface marks.',
@@ -323,10 +325,10 @@ export const PRODUCTS = [
   {
     id: 'bv-22', sku: 'BV-WT-0022', category: 'watches', tag: 'archive', oneOfOne: true, priceUsd: 340, compareUsd: 420,
     name: 'Longines Art Deco Cocktail Watch, 1950s',
-    era: 'c. 1955 · Switzerland',
+    era: 'c. 1955, Switzerland',
     description: 'A tiny jewel of a watch: rectangular Art Deco case, silvered dial and a silk cord strap. Hand-wound and ticking happily after a full service.',
     highlights: ['Art Deco rectangular case', 'Hand-wound mechanical movement', 'New silk cord strap'],
-    measurements: 'Case 15 × 22 mm · Cord fits 14–18 cm wrist',
+    measurements: 'Case 15 × 22 mm, Cord fits 14–18 cm wrist',
     fit: 'Adjustable sliding cord — fits most wrists.',
     materials: '10k gold-filled case, silvered dial, silk cord.',
     condition: 'Good vintage. Slight dial patina that adds character.',
@@ -335,6 +337,8 @@ export const PRODUCTS = [
     image: U('photo-1594534475808-b18fc33b045e'), fallback: P('9E5A5A', 'FAF7F2', 'Longines Deco'),
     gallery: [], shades: null, stock: 1,
   },
+  // The House Archive Edition (products-house.js)
+  ...HOUSE_PRODUCTS,
 ];
 
 export const BUNDLE = {
@@ -373,5 +377,6 @@ export function allProducts() { return [...storeProducts.filter((p) => !p.hidden
 
 export function findProduct(id) {
   if (id === BUNDLE.id) return BUNDLE;
+  if (id === BONNET.id) return BONNET;
   return storeProducts.find((p) => p.id === id && !p.hidden) || partnerProducts.find((p) => p.id === id) || null;
 }
