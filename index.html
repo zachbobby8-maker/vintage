@@ -128,6 +128,53 @@
     </div>
   </section>
 
+  <!-- NEW: The House Archive Edition (signature wigs, house bags, silk care) -->
+  <section id="house" class="house" aria-labelledby="house-title">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="chip"><span class="dot dot-rose" aria-hidden="true"></span><span data-i18n="house.chip">The House Archive Edition, signature aesthetic</span></span>
+        <h2 id="house-title" class="display hero-title house-title">
+          <span data-i18n="house.title1">Sculpted hair,</span>
+          <em class="rose" data-i18n="house.title2">braided gold</em>
+          <span data-i18n="house.title3">leather & 90s couture.</span>
+        </h2>
+        <p class="lead" data-i18n="house.lead">One house signature: pre-styled HD lace wigs shipped in satin dust bags, croc-embossed espresso leather with twisted-braid clasps, factory-sealed velvet cosmetics and 1-of-1 vintage tailoring.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" type="button" data-jump="wigs" data-i18n="house.ctaWigs">Explore hair & wigs</button>
+          <button class="btn btn-outline btn-lg" type="button" data-jump="bags" data-i18n="house.ctaBags">House bags & vanity</button>
+        </div>
+        <div class="pillars">
+          <div><p class="pillar-title" data-i18n="house.p1Title">Custom HD units</p><p class="pillar-text" data-i18n="house.p1Text">Pre-plucked & salon-styled with gold cuffs</p></div>
+          <div><p class="pillar-title" data-i18n="house.p2Title">Braided hardware</p><p class="pillar-text" data-i18n="house.p2Text">Signature gold-tone twisted clasps</p></div>
+          <div><p class="pillar-title" data-i18n="house.p3Title">Card & $BRAID</p><p class="pillar-text" data-i18n="house.p3Text">Paystack NGN/USD & 5% $BRAID rebate</p></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="hero-main house-main">
+          <img src="https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&w=900&q=80" data-fallback="https://placehold.co/600x800/1A1715/C5A059?text=Supermodel+Blowout" alt="" data-i18n-alt="house.img1Alt" loading="lazy" />
+          <figcaption>
+            <span class="cap-eyebrow" data-i18n="house.cap1Eyebrow">House hair archive, 22" HD lace</span>
+            <span class="cap-title" data-i18n="house.cap1Title">The 1994 Supermodel Blowout</span>
+          </figcaption>
+        </figure>
+        <div class="hero-side">
+          <figure class="hero-sq house-sq">
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80" data-fallback="https://placehold.co/500x500/1A1715/FAF7F2?text=Braided+Clasp+Bag" alt="" data-i18n-alt="house.img2Alt" loading="lazy" />
+            <figcaption>
+              <span class="cap-eyebrow" data-i18n="house.cap2Eyebrow">House leather</span>
+              <span class="cap-title cap-sm" data-i18n="house.cap2Title">East-West Braided Clasp Bag</span>
+            </figcaption>
+          </figure>
+          <div class="note-card">
+            <p class="cap-eyebrow" data-i18n="house.ritualEyebrow">Wig care ritual</p>
+            <p class="note-quote" data-i18n="house.ritualQuote">"Protect every HD lace hairline and roller-set wave overnight in 22-momme mulberry silk."</p>
+            <button class="btn btn-gold btn-sm btn-block js-add-bonnet" type="button"><span data-i18n="bonnet.add">+ Add silk bonnet</span> <span class="bonnet-price"></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Catalog -->
   <main id="catalog" class="container section">
     <div class="section-head">
@@ -313,11 +360,19 @@
           <label for="qv-shade" data-i18n="qv.shade">Shade / variant</label>
           <select id="qv-shade" class="input"></select>
         </div>
-        <label class="check-card">
+        <label id="qv-bundle-wrap" class="check-card">
           <input type="checkbox" id="qv-bundle" checked />
           <span>
             <strong><span data-i18n="qv.bundleTitle">Complete the look</span> (+<span class="bundle-price"></span>)</strong>
             <span class="small muted block" data-i18n="qv.bundleText">Add the velvet lip oil & gold tortoise claw clip set. Save 35%.</span>
+          </span>
+        </label>
+        <!-- NEW: wigs offer the silk bonnet instead of the vanity bundle -->
+        <label id="qv-bonnet-wrap" class="check-card" hidden>
+          <input type="checkbox" id="qv-bonnet" checked />
+          <span>
+            <strong><span data-i18n="qv.bonnetTitle">Add a 22-momme mulberry silk bonnet</span> (+<span class="bonnet-price"></span>)</strong>
+            <span class="small muted block" data-i18n="qv.bonnetText">Protects HD lace edges and keeps roller-set curls fresh overnight.</span>
           </span>
         </label>
         <button id="qv-add" class="btn btn-primary btn-lg btn-block" type="button"></button>
@@ -601,6 +656,21 @@
             <div class="metric"><p class="metric-label" data-i18n="admin.mOrders">Orders</p><p id="m-orders" class="metric-value"></p></div>
             <div class="metric"><p class="metric-label" data-i18n="admin.mAov">Average order</p><p id="m-aov" class="metric-value"></p></div>
             <div class="metric metric-gold"><p class="metric-label" data-i18n="admin.mOpen">Awaiting dispatch</p><p id="m-open" class="metric-value"></p></div>
+          </div>
+          <!-- NEW: House treasury (admin only) -->
+          <div class="panel stack treasury">
+            <div class="row-between">
+              <p class="eyebrow gold" data-i18n="treasury.eyebrow">BraidMesh treasury</p>
+              <span class="tag tag-house" data-i18n="treasury.rule">65% of net margin to $BRAID vault</span>
+            </div>
+            <div class="metrics">
+              <div class="metric"><p class="metric-label" data-i18n="treasury.gross">Gross sales</p><p id="tr-gross" class="metric-value"></p></div>
+              <div class="metric"><p class="metric-label" data-i18n="treasury.margin">Net margin</p><p id="tr-margin" class="metric-value"></p></div>
+              <div class="metric"><p class="metric-label" data-i18n="treasury.net">Net profit</p><p id="tr-net" class="metric-value"></p></div>
+              <div class="metric metric-gold"><p class="metric-label" data-i18n="treasury.sweep">Treasury sweep</p><p id="tr-sweep" class="metric-value"></p></div>
+            </div>
+            <p id="tr-braid" class="small muted"></p>
+            <p class="small muted" data-i18n="treasury.hint">Only admins see this. Worked out from your real orders (cancelled ones left out).</p>
           </div>
           <div class="panel stack">
             <p class="small muted" data-i18n="admin.restockHint">Sold 1-of-1 pieces are hidden from sale. Restore them if an order was cancelled.</p>
