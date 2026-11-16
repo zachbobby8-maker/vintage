@@ -67,3 +67,4 @@ export default async function handler(req, res) {
   const token = sign({ name: match.name, exp }, secret(list));
   res.status(200).json({ ok: true, name: match.name, exp, token });
 }
+
