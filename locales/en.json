@@ -69,6 +69,33 @@
     "2": { "title": "100% Sealed", "text": "Factory-fresh cosmetics & kits" },
     "3": { "title": "Chat the merchant", "text": "Message us about any order" }
   },
+  "house": {
+    "chip": "The House Archive Edition, signature aesthetic",
+    "title1": "Sculpted hair,",
+    "title2": "braided gold",
+    "title3": "leather & 90s couture.",
+    "lead": "One house signature: pre-styled HD lace wigs shipped in satin dust bags, croc-embossed espresso leather with twisted-braid clasps, factory-sealed velvet cosmetics and 1-of-1 vintage tailoring.",
+    "ctaWigs": "Explore hair & wigs",
+    "ctaBags": "House bags & vanity",
+    "p1Title": "Custom HD units",
+    "p1Text": "Pre-plucked & salon-styled with gold cuffs",
+    "p2Title": "Braided hardware",
+    "p2Text": "Signature gold-tone twisted clasps",
+    "p3Title": "Card & $BRAID",
+    "p3Text": "Paystack NGN/USD & 5% $BRAID rebate",
+    "img1Alt": "The 1994 Supermodel Blowout HD lace wig",
+    "cap1Eyebrow": "House hair archive, 22\" HD lace",
+    "cap1Title": "The 1994 Supermodel Blowout",
+    "img2Alt": "East-West braided clasp bag in espresso croc leather",
+    "cap2Eyebrow": "House leather",
+    "cap2Title": "East-West Braided Clasp Bag",
+    "ritualEyebrow": "Wig care ritual",
+    "ritualQuote": "\"Protect every HD lace hairline and roller-set wave overnight in 22-momme mulberry silk.\""
+  },
+  "bonnet": {
+    "add": "+ Add silk bonnet",
+    "cardAdd": "+ Add silk bonnet ({price})"
+  },
   "catalog": {
     "eyebrow": "The weekly vault",
     "empty": "Nothing in this category right now."
@@ -77,7 +104,8 @@
     "archive": "1 of 1 archive",
     "sealed": "Factory sealed",
     "essential": "Curated essential",
-    "partner": "Partner store"
+    "partner": "Partner store",
+    "house": "House signature"
   },
   "card": {
     "add": "Add to bag",
@@ -344,6 +372,8 @@
     "shade": "Shade / variant",
     "bundleTitle": "Complete the look",
     "bundleText": "Add the velvet lip oil & gold tortoise claw clip set. Save 35%.",
+    "bonnetTitle": "Add a 22-momme mulberry silk bonnet",
+    "bonnetText": "Protects HD lace edges and keeps roller-set curls fresh overnight.",
     "add": "Add selection to bag",
     "photoN": "Show photo {n}",
     "oneOfOne": "Only one exists",
@@ -599,6 +629,16 @@
     "restock": "Restore sold pieces to the vault",
     "restocked": "Sold pieces are back in the vault."
   },
+  "treasury": {
+    "eyebrow": "BraidMesh treasury",
+    "rule": "65% of net margin to $BRAID vault",
+    "gross": "Gross sales",
+    "margin": "Net margin",
+    "net": "Net profit",
+    "sweep": "Treasury sweep",
+    "braid": "About {n} $BRAID at $0.42 each.",
+    "hint": "Only admins see this. Worked out from your real orders (cancelled ones left out)."
+  },
   "ap": {
     "add": "+ Add product",
     "search": "Search products",
@@ -711,6 +751,7 @@
       "announce": "Top banner",
       "header": "Header & menu",
       "hero": "Main banner",
+      "house": "House Archive Edition",
       "catalog": "Shop & bundle",
       "brands": "Brands section",
       "watches": "Watches section",
@@ -727,6 +768,8 @@
     "img": {
       "heroMain": "Main banner, big picture",
       "heroSquare": "Main banner, small picture",
+      "houseMain": "House Archive, big picture",
+      "houseSquare": "House Archive, small picture",
       "bundle1": "Bundle picture 1",
       "bundle2": "Bundle picture 2",
       "bundle3": "Bundle picture 3",
