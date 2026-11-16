@@ -11,6 +11,7 @@ const GROUPS = [
   { id: 'announce', sel: '.announce' },
   { id: 'header', sel: '.header, .tabbar' },
   { id: 'hero', sel: '.hero' },
+  { id: 'house', sel: '#house' },
   { id: 'catalog', sel: '#catalog > .section-head, #grid-empty, .bundle', extra: ['heading.all', 'heading.couture', 'heading.bags', 'heading.watches', 'heading.beauty', 'heading.vanity', 'heading.wigs', 'heading.partners'] },
   { id: 'brands', sel: '#brands' },
   { id: 'watches', sel: '#watches' },
@@ -23,6 +24,8 @@ const GROUPS = [
 const IMAGES = [
   { id: 'heroMain', sel: '.hero-main img' },
   { id: 'heroSquare', sel: '.hero-sq img' },
+  { id: 'houseMain', sel: '.house-main img' },
+  { id: 'houseSquare', sel: '.house-sq img' },
   { id: 'bundle1', sel: '.bundle-imgs img:nth-child(1)' },
   { id: 'bundle2', sel: '.bundle-imgs img:nth-child(2)' },
   { id: 'bundle3', sel: '.bundle-imgs img:nth-child(3)' },
