@@ -35,9 +35,10 @@ export default `
                 <option value="archive" data-i18n="tag.archive">1 of 1 archive</option>
                 <option value="sealed" data-i18n="tag.sealed">Factory sealed</option>
                 <option value="essential" data-i18n="tag.essential">Curated essential</option>
+                <option value="house" data-i18n="tag.house">House signature</option>
               </select>
             </div>
-            <div class="field span-2"><label for="pe-era" data-i18n="pe.era">Era / subtitle</label><input id="pe-era" class="input" maxlength="80" data-i18n-placeholder="pe.eraPh" placeholder="1994 · Milan" /></div>
+            <div class="field span-2"><label for="pe-era" data-i18n="pe.era">Era / subtitle</label><input id="pe-era" class="input" maxlength="80" data-i18n-placeholder="pe.eraPh" placeholder="1994, Milan" /></div>
             <div class="field"><label for="pe-sku" data-i18n="pe.sku">SKU (optional)</label><input id="pe-sku" class="input" maxlength="30" /></div>
             <div class="field"><label class="check-row pe-check"><input type="checkbox" id="pe-oneofone" /><span data-i18n="pe.oneOfOne">One-of-a-kind piece</span></label></div>
           </div>
