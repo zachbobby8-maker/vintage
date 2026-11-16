@@ -3,10 +3,10 @@ import { PRODUCTS, getStoreProducts, setStoreProducts, normalizeProduct, placeho
 
 const KEY = 'bv_products';
 const SEED_KEY = 'bv_products_seed';
-const SEED_VERSION = 3; // v2 adds the wigs collection, v3 adds vintage watches
-const SEED_ADDS = { 2: 'wigs', 3: 'watches' };
+const SEED_VERSION = 4; // v2 adds wigs, v3 adds vintage watches, v4 adds The House Archive Edition
+const SEED_ADDS = { 2: 'wigs', 3: 'watches', 4: 'house' };
 const CATS = ['couture', 'bags', 'watches', 'beauty', 'vanity', 'wigs'];
-const TAGS = ['archive', 'sealed', 'essential'];
+const TAGS = ['archive', 'sealed', 'essential', 'house'];
 
 export function initCatalogAdmin(ctx) {
   const { t, esc, fmt, state } = ctx;
@@ -26,7 +26,7 @@ export function initCatalogAdmin(ctx) {
       if (seen < SEED_VERSION) {
         const ids = new Set(saved.map((p) => p?.id));
         const cats = Object.entries(SEED_ADDS).filter(([v]) => Number(v) > seen).map(([, c]) => c);
-        const added = PRODUCTS.filter((p) => cats.includes(p.category) && !ids.has(p.id));
+        const added = PRODUCTS.filter((p) => (p.collection === 'house' ? cats.includes('house') : cats.includes(p.category)) && !ids.has(p.id));
         if (added.length) { setStoreProducts([...saved, ...added]); await ctx.save(KEY, getStoreProducts()); }
         await ctx.save(SEED_KEY, SEED_VERSION);
       }
@@ -74,7 +74,7 @@ export function initCatalogAdmin(ctx) {
     $('#ap-list').innerHTML = list.map((p) => `<div class="product-row ${p.hidden ? 'is-hidden' : ''}">
       <img src="${esc(p.image)}" data-fallback="${esc(p.fallback)}" alt="" loading="lazy" />
       <div class="order-row-main"><span class="order-row-title">${esc(p.name)}</span>
-        <span class="order-row-sub">${esc([t('cat.' + p.category), fmt(p.priceUsd), statusText(p)].join(' · '))}</span></div>
+        <span class="order-row-sub">${esc([t('cat.' + p.category), fmt(p.priceUsd), statusText(p)].join(', '))}</span></div>
       <div class="product-row-actions">
         <button class="btn btn-primary btn-sm" type="button" data-pedit="${esc(p.id)}">${esc(t('ap.edit'))}</button>
         <button class="btn btn-outline btn-sm" type="button" data-pdup="${esc(p.id)}">${esc(t('ap.duplicate'))}</button>
