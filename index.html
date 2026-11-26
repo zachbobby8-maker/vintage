@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="shop.css" />
 </head>
 <body>
   <!-- Announcement bar -->
@@ -77,6 +78,20 @@
         <button class="nav-btn" type="button" data-cat="vanity" data-i18n="cat.vanity">Vanity & Hair</button>
         <button class="nav-btn" type="button" data-cat="wigs" data-i18n="cat.wigs">Wigs & Hair Units</button>
       </nav>
+
+      <!-- NEW: search bar with live suggestions -->
+      <div class="search-wrap">
+        <form id="search-form" class="search-form" role="search">
+          <label for="site-search" class="sr-only" data-i18n="shop.searchLabel">Search the store</label>
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="site-search" class="search-input" type="search" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="search-suggest" data-i18n-placeholder="shop.searchPh" placeholder="Search wigs, Cartier, silk, lip oil…" />
+          <button id="search-clear" class="search-clear" type="button" hidden data-i18n-aria-label="shop.clearSearch" aria-label="Clear search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+          <button class="btn btn-primary btn-sm search-go" type="submit" data-i18n="shop.searchGo">Search</button>
+        </form>
+        <ul id="search-suggest" class="search-suggest" hidden></ul>
+      </div>
     </div>
   </header>
 
@@ -177,6 +192,17 @@
 
   <!-- Catalog -->
   <main id="catalog" class="container section">
+    <!-- NEW: Today's deals -->
+    <section id="deals" class="deals" aria-labelledby="deals-title" hidden>
+      <div class="row-between">
+        <div>
+          <p class="eyebrow eyebrow-rose" data-i18n="deal.eyebrow">Limited time</p>
+          <h2 id="deals-title" class="display h3" data-i18n="deal.title">Today's deals</h2>
+        </div>
+      </div>
+      <div id="deals-list" class="strip"></div>
+    </section>
+
     <div class="section-head">
       <div>
         <p class="eyebrow eyebrow-rose" data-i18n="catalog.eyebrow">The weekly vault</p>
@@ -194,8 +220,48 @@
       </div>
     </div>
 
+    <!-- NEW: sort, filters & saved items -->
+    <div class="toolbar">
+      <p id="results-count" class="small muted" aria-live="polite"></p>
+      <div class="toolbar-actions">
+        <button id="saved-toggle" class="pill pill-saved" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.7 3.6 4.5 7 4.5c2 0 3.6 1.1 5 3 1.4-1.9 3-3 5-3 3.4 0 5.6 3.2 4.3 6.6-1.8 4.8-9.3 9.4-9.3 9.4Z"/></svg>
+          <span data-i18n="shop.saved">Saved</span> <span id="saved-count" class="pill-count">0</span>
+        </button>
+        <button id="filters-toggle" class="pill" type="button" aria-expanded="false" aria-controls="filters-panel" data-i18n="shop.filters">Filters</button>
+        <label for="sort-select" class="sr-only" data-i18n="shop.sortLabel">Sort by</label>
+        <select id="sort-select" class="input input-sm">
+          <option value="featured" data-i18n="shop.sortFeatured">Sort: Featured</option>
+          <option value="priceAsc" data-i18n="shop.sortLow">Price: low to high</option>
+          <option value="priceDesc" data-i18n="shop.sortHigh">Price: high to low</option>
+          <option value="newest" data-i18n="shop.sortNew">Newest first</option>
+          <option value="rating" data-i18n="shop.sortRating">Top rated</option>
+        </select>
+      </div>
+    </div>
+    <div id="filters-panel" class="filters-panel panel" hidden>
+      <div class="field"><label for="f-min" data-i18n="shop.minPrice">Min price</label><input id="f-min" type="number" min="0" inputmode="numeric" class="input" /></div>
+      <div class="field"><label for="f-max" data-i18n="shop.maxPrice">Max price</label><input id="f-max" type="number" min="0" inputmode="numeric" class="input" /></div>
+      <label class="check-row"><input type="checkbox" id="f-stock" /><span data-i18n="shop.inStock">In stock only</span></label>
+      <label class="check-row"><input type="checkbox" id="f-sale" /><span data-i18n="shop.onSale">On sale</span></label>
+      <button id="filters-clear" class="btn btn-outline btn-sm" type="button" data-i18n="shop.clearAll">Clear all</button>
+    </div>
+
     <div id="product-grid" class="product-grid"></div>
     <p id="grid-empty" class="empty-state" hidden data-i18n="catalog.empty">Nothing in this category right now.</p>
+    <div id="grid-noresults" class="empty-state" hidden>
+      <p data-i18n="shop.noResults">No pieces match your search or filters.</p>
+      <button id="noresults-clear" class="btn btn-outline btn-sm" type="button" data-i18n="shop.clearAll">Clear all</button>
+    </div>
+
+    <!-- NEW: recently viewed -->
+    <section id="recent" class="recent" aria-labelledby="recent-title" hidden>
+      <div class="row-between">
+        <h2 id="recent-title" class="display h4" data-i18n="shop.recent">Recently viewed</h2>
+        <button id="recent-clear" class="link-btn small" type="button" data-i18n="shop.recentClear">Clear</button>
+      </div>
+      <div id="recent-list" class="strip"></div>
+    </section>
 
     <section class="bundle" aria-labelledby="bundle-title">
       <div class="bundle-copy">
@@ -339,75 +405,7 @@
     <div class="container footer-bottom"><p data-i18n="footer.copy">© 2026 BraidVintage.com. All rights reserved.</p></div>
   </footer>
 
-  <!-- Quick view -->
-  <dialog id="qv-dialog" class="modal modal-wide" aria-labelledby="qv-name">
-    <div class="modal-card qv">
-      <button class="close-btn close-float" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-      </button>
-      <div class="qv-media">
-        <div class="qv-main-img"><img id="qv-img" alt="" /></div>
-        <div id="qv-thumbs" class="qv-thumbs" hidden></div>
-      </div>
-      <div class="qv-body">
-        <div class="row"><span id="qv-badge" class="tag"></span><span id="qv-stock" class="tag tag-outline" hidden></span></div>
-        <p id="qv-era" class="eyebrow"></p>
-        <h3 id="qv-name" class="display h3"></h3>
-        <p class="row"><span id="qv-price" class="price-lg rose"></span><span id="qv-compare" class="strike" hidden></span></p>
-        <p id="qv-desc" class="qv-desc" hidden></p>
-        <ul id="qv-highlights" class="qv-highlights" hidden></ul>
-        <div id="qv-shade-wrap" class="field" hidden>
-          <label for="qv-shade" data-i18n="qv.shade">Shade / variant</label>
-          <select id="qv-shade" class="input"></select>
-        </div>
-        <label id="qv-bundle-wrap" class="check-card">
-          <input type="checkbox" id="qv-bundle" checked />
-          <span>
-            <strong><span data-i18n="qv.bundleTitle">Complete the look</span> (+<span class="bundle-price"></span>)</strong>
-            <span class="small muted block" data-i18n="qv.bundleText">Add the velvet lip oil & gold tortoise claw clip set. Save 35%.</span>
-          </span>
-        </label>
-        <!-- NEW: wigs offer the silk bonnet instead of the vanity bundle -->
-        <label id="qv-bonnet-wrap" class="check-card" hidden>
-          <input type="checkbox" id="qv-bonnet" checked />
-          <span>
-            <strong><span data-i18n="qv.bonnetTitle">Add a 22-momme mulberry silk bonnet</span> (+<span class="bonnet-price"></span>)</strong>
-            <span class="small muted block" data-i18n="qv.bonnetText">Protects HD lace edges and keeps roller-set curls fresh overnight.</span>
-          </span>
-        </label>
-        <button id="qv-add" class="btn btn-primary btn-lg btn-block" type="button"></button>
-        <div class="qv-details">
-          <details open>
-            <summary data-i18n="qv.secMeasure">Measurements & fit</summary>
-            <p id="qv-measure"></p>
-            <p id="qv-fit" class="muted" hidden></p>
-          </details>
-          <details id="qv-sec-materials">
-            <summary data-i18n="qv.secMaterials">Materials & composition</summary>
-            <p id="qv-materials"></p>
-          </details>
-          <details id="qv-sec-condition">
-            <summary data-i18n="qv.condition">Curator condition</summary>
-            <p id="qv-condition"></p>
-          </details>
-          <details id="qv-sec-care">
-            <summary data-i18n="qv.secCare">Care guide</summary>
-            <p id="qv-care"></p>
-          </details>
-          <details id="qv-sec-prov">
-            <summary data-i18n="qv.secProvenance">Provenance & authenticity</summary>
-            <p id="qv-provenance"></p>
-          </details>
-          <details>
-            <summary data-i18n="qv.secShipping">Shipping & returns</summary>
-            <ul id="qv-ship-list" class="qv-highlights"></ul>
-            <p class="muted" data-i18n="qv.returns">1-of-1 archive pieces are final sale. Sealed beauty can be returned unopened within 14 days. Message us from your order for help.</p>
-          </details>
-        </div>
-        <p id="qv-sku" class="small muted" hidden></p>
-      </div>
-    </div>
-  </dialog>
+  <!-- Product page (quick view) lives in partials/quickview.js -->
 
   <!-- Cart drawer -->
   <dialog id="cart-dialog" class="drawer" aria-labelledby="cart-title">
@@ -451,56 +449,7 @@
 
   <!-- Checkout dialog and the "Our stores" section live in partials/*.js -->
 
-  <!-- Buyer orders & chat -->
-  <dialog id="orders-dialog" class="modal" aria-labelledby="orders-title">
-    <div class="modal-card">
-      <div class="modal-head">
-        <div>
-          <p class="eyebrow eyebrow-rose" data-i18n="orders.eyebrow">Client concierge</p>
-          <h3 id="orders-title" class="display h3" data-i18n="orders.title">Your orders & messages</h3>
-        </div>
-        <button class="close-btn" type="button" data-close data-i18n-aria-label="common.close" aria-label="Close">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="orders-list-view">
-          <p class="small muted" data-i18n="orders.hint">Tap an order to see its shipping status and message the merchant.</p>
-          <div id="orders-list" class="order-list"></div>
-          <div id="orders-empty" class="empty-state" hidden>
-            <p class="display h4" data-i18n="orders.emptyTitle">No orders yet</p>
-            <p class="small muted" data-i18n="orders.emptyText">Once you place an order you can chat with the merchant about it here.</p>
-          </div>
-        </div>
-        <div id="order-detail" hidden>
-          <button id="od-back" class="link-btn back-link" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-            <span data-i18n="common.allOrders">All orders</span>
-          </button>
-          <div class="od-head">
-            <div><p id="od-date" class="eyebrow"></p><h4 id="od-id" class="display h4"></h4></div>
-            <span id="od-status" class="status-chip"></span>
-          </div>
-          <div id="od-items" class="mini-items"></div>
-          <div class="panel">
-            <p class="eyebrow" data-i18n="od.shipTo">Shipping to</p>
-            <p id="od-ship" class="small"></p>
-            <p id="od-method" class="small muted"></p>
-            <p id="od-tracking" class="small strong" hidden></p>
-          </div>
-          <div class="chat">
-            <p class="eyebrow" data-i18n="chat.title">Messages with the merchant</p>
-            <div id="od-chat-log" class="chat-log" aria-live="polite"></div>
-            <form id="od-chat-form" class="chat-form">
-              <label for="od-chat-input" class="sr-only" data-i18n="chat.label">Message</label>
-              <input id="od-chat-input" class="input" autocomplete="off" maxlength="600" data-i18n-placeholder="chat.placeholder" placeholder="Ask about sizing, delivery, changes…" />
-              <button class="btn btn-primary" type="submit" data-i18n="chat.send">Send</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </dialog>
+  <!-- Buyer orders & chat dialog lives in partials/orders.js -->
 
   <!-- Seller application, admin login, product editor and casting dialogs live in partials/*.js -->
 
