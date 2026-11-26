@@ -11,6 +11,9 @@ import { initBrands } from './brands.js';
 import { loadPartials, translate } from './partials.js';
 import { initStores } from './stores.js';
 import { initSiteEditor } from './site-editor.js';
+import { initShop } from './shop.js';
+import { initDeals } from './deals.js';
+import { initReviews } from './reviews.js';
 
 // Backup word list: used when the site runs outside the builder (e.g. on Vercel)
 // or before the translations load, so raw keys like "heading.all" never show.
@@ -196,62 +199,20 @@ const isSold = (p) => state.sold.has(p.id) || (!p.oneOfOne && p.stock != null &&
 const inCart = (id) => state.cart.some((i) => i.id === id);
 const unavailable = (p) => isSold(p) || (p.oneOfOne && inCart(p.id));
 const cartQty = (id) => state.cart.filter((l) => l.id === id).reduce((s, l) => s + l.qty, 0);
-
-function setCategory(cat) {
-  state.category = cat;
-  $('#catalog-heading').textContent = t('heading.' + cat);
-  $$('[data-cat]').forEach((b) => {
-    const active = b.dataset.cat === cat;
-    b.classList.toggle('is-active', active);
-    if (b.classList.contains('pill')) b.setAttribute('aria-pressed', String(active));
-  });
-  renderProducts();
-}
-function renderCounts() {
-  const all = allProducts();
-  $$('[data-count]').forEach((el) => {
-    const c = el.dataset.count;
-    el.textContent = `(${all.filter((p) => matchesCategory(p, c)).length})`;
-  });
-}
-function matchesCategory(p, cat) {
-  if (cat === 'all') return true;
-  if (cat === 'partners') return !!p.partner;
-  return p.category === cat;
-}
-function renderProducts() {
-  const list = allProducts().filter((p) => matchesCategory(p, state.category));
-  const grid = $('#product-grid');
-  $('#grid-empty').hidden = list.length > 0;
-  grid.innerHTML = list.map((p) => {
-    const sold = isSold(p);
-    const held = p.oneOfOne && inCart(p.id);
-    const unav = sold || held;
-    const label = sold ? t('card.soldOut') : held ? t('card.inBag') : t('card.add');
-    return `<article class="card ${unav ? 'is-unavailable' : ''}">
-      <button class="card-media" type="button" data-qv="${p.id}" aria-label="${esc(t('card.inspectAria', { name: p.name }))}">
-        <img src="${esc(p.image)}" data-fallback="${esc(p.fallback)}" alt="${esc(p.name)}" loading="lazy" />
-        <span class="card-tags"><span class="tag tag-${p.tag}">${esc(t('tag.' + p.tag))}</span>${unav ? `<span class="tag tag-dark">${esc(t(sold ? 'card.archived' : 'card.reserved'))}</span>` : ''}</span>
-        <span class="card-hover">${esc(t('card.inspect'))}</span>
-      </button>
-      <div class="card-body">
-        <div class="card-meta"><span>${esc(tidy(p.era))}</span><span>${esc(t('cat.' + p.category))}</span></div>
-        <h3 class="card-title"><button class="link-btn" type="button" data-qv="${p.id}">${esc(p.name)}</button></h3>
-        <p class="card-desc">${esc(tidy(p.measurements))}</p>
-        ${!sold && !p.oneOfOne && p.stock != null && p.stock <= 5 ? `<p class="stock-note">${esc(t('qv.onlyLeft', { n: p.stock }))}</p>` : ''}
-        ${p.category === 'wigs' && !unav ? `<button class="bonnet-chip" type="button" data-wig-bonnet="${p.id}">${esc(t('bonnet.cardAdd', { price: fmt(BONNET.priceUsd) }))}</button>` : ''}
-        <div class="card-foot"><span class="price-wrap"><span class="price">${esc(fmt(p.priceUsd))}</span>${p.compareUsd > p.priceUsd ? `<span class="strike">${esc(fmt(p.compareUsd))}</span>` : ''}</span>
-          <button class="btn btn-primary btn-sm" type="button" data-add="${p.id}" ${unav ? 'disabled' : ''}>${esc(label)}</button></div>
-      </div></article>`;
-  }).join('');
-  attachFallbacks(grid);
-}
+// Grid, search, sort, filters, wishlist & recently viewed live in shop.js;
+// deal prices live in deals.js. These thin wrappers keep the rest of main.js simple.
+let shop = null;
+let dealsApi = null;
+function priceOf(p) { return dealsApi ? dealsApi.priceOf(p) : p.priceUsd; }
+function setCategory(cat) { shop?.setCategory(cat); }
+function renderCounts() { shop?.renderCounts(); }
+function renderProducts() { shop?.renderProducts(); }
 
 /* ---------- cart ---------- */
 function cartLines() {
   return state.cart.map((line) => ({ ...line, product: findProduct(line.id) })).filter((l) => l.product);
 }
-function subtotalUsd() { return cartLines().reduce((s, l) => s + l.product.priceUsd * l.qty, 0); }
+function subtotalUsd() { return cartLines().reduce((s, l) => s + priceOf(l.product) * l.qty, 0); }
 function persistCart() { save(KEYS.cart, state.cart); }
 
 function addToCart(id, shade, openBag = true) {
@@ -300,7 +261,7 @@ function renderCart() {
         <div class="row-between"><p class="cart-item-name">${esc(l.product.name)}</p>
           <button class="remove-btn" type="button" data-remove="${i}" aria-label="${esc(t('cart.remove'))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
         <p class="small muted">${esc(l.product.oneOfOne ? t('cart.oneOfOne') : l.shade || '')}</p>
-        <div class="cart-item-foot"><span class="strong small">${esc(fmt(l.product.priceUsd * l.qty))}</span>
+        <div class="cart-item-foot"><span class="strong small">${esc(fmt(priceOf(l.product) * l.qty))}</span>
           ${l.product.oneOfOne ? `<span class="tag tag-archive">${esc(t('cart.held'))}</span>` : `<div class="qty">
             <button type="button" data-dec="${i}" aria-label="${esc(t('cart.decrease'))}">−</button><span>${l.qty}</span>
             <button type="button" data-inc="${i}" aria-label="${esc(t('cart.increase'))}">+</button></div>`}
@@ -386,7 +347,7 @@ function nextOrderId() {
 }
 // Direct-to-merchant messaging: in-app inbox first; Telegram (or WhatsApp if switched on) is optional.
 function bagLinesText() {
-  return cartLines().map((l) => `- ${l.product.name}${!l.product.oneOfOne && l.shade ? ` (${l.shade})` : ''} x${l.qty}: ${fmt(l.product.priceUsd * l.qty)}`).join('\n');
+  return cartLines().map((l) => `- ${l.product.name}${!l.product.oneOfOne && l.shade ? ` (${l.shade})` : ''} x${l.qty}: ${fmt(priceOf(l.product) * l.qty)}`).join('\n');
 }
 function openMerchant(text) {
   const links = contactUI?.publicLinks(text) || {};
@@ -440,7 +401,7 @@ async function submitCheckout(e) {
   }
   const order = {
     id, createdAt: Date.now(), status: 'placed', rail: state.rail,
-    items: cartLines().map((l) => ({ id: l.id, name: l.product.name, image: l.product.image, shade: l.product.oneOfOne ? null : l.shade, qty: l.qty, priceUsd: l.product.priceUsd })),
+    items: cartLines().map((l) => ({ id: l.id, name: l.product.name, image: l.product.image, shade: l.product.oneOfOne ? null : l.shade, qty: l.qty, priceUsd: priceOf(l.product) })),
     subtotalUsd: totals.sub, shippingUsd: totals.ship, discountUsd: totals.discount, totalUsd: totals.total,
     customer: { name: fields.name, email: fields.email, phone: fields.phone },
     shipping: { address: fields.address, city: fields.city, country: fields.country, methodId: method.id, methodName: method.name, carrier: '', tracking: '' },
@@ -466,8 +427,8 @@ async function submitCheckout(e) {
 
 /* ---------- currency, shipping, countdown ---------- */
 function renderPriceLabels() {
-  $$('.bundle-price').forEach((el) => { el.textContent = fmt(BUNDLE.priceUsd); });
-  $$('.bonnet-price').forEach((el) => { el.textContent = fmt(BONNET.priceUsd); });
+  $$('.bundle-price').forEach((el) => { el.textContent = fmt(priceOf(BUNDLE)); });
+  $$('.bonnet-price').forEach((el) => { el.textContent = fmt(priceOf(BONNET)); });
   $('#bundle-compare').textContent = t('bundle.compare', { amount: fmt(BUNDLE.compareUsd) });
   $('#announce-ship').textContent = t('announce.freeShip', { amount: fmt(Number(state.shipping.freeThresholdUsd) || 0) });
 }
@@ -481,6 +442,8 @@ function setCurrency(cur, persist = true) {
 }
 function refreshPrices() {
   renderPriceLabels(); renderProducts(); renderCart();
+  shop?.renderRecent();
+  dealsApi?.renderStrip();
   if ($('#checkout-dialog').open) { renderMethods(); renderCheckoutTotals(); }
   quickView.refresh();
   notifyOrders();
@@ -586,9 +549,16 @@ const ctx = {
   saveShipping, restoreStock, onOrdersChange: (fn) => orderListeners.push(fn),
   refreshCatalog: () => { renderCounts(); renderProducts(); }, pruneCart,
   isSold, unavailable, addToCart, addBundle, addBonnet,
+  priceOf, bonnetPrice: () => priceOf(BONNET), openCheckout, refreshPrices,
   baseT, setTextOverrides: (map) => { OVERRIDES = map && typeof map === 'object' ? { ...map } : {}; },
-  refreshHeading: () => { $('#catalog-heading').textContent = t('heading.' + state.category); },
+  refreshHeading: () => { shop?.renderHeading(); },
 };
+shop = initShop(ctx);
+ctx.shop = shop;
+dealsApi = initDeals(ctx);
+ctx.deals = dealsApi;
+const reviewsUI = initReviews(ctx);
+ctx.reviews = reviewsUI;
 const ordersUI = initOrders(ctx);
 const sellersUI = initSellers(ctx);
 ctx.sellers = sellersUI;
@@ -663,7 +633,7 @@ async function boot() {
   bindEvents();
   attachFallbacks();
   renderCounts();
-  $('#catalog-heading').textContent = t('heading.all');
+  shop.renderHeading();
   startCountdown();
   await catalogAdmin.load();
   await siteEditor.load();
@@ -672,6 +642,7 @@ async function boot() {
   await castingUI.load();
   await loadState();
   await inboxUI.load();
+  await Promise.all([shop.load(), dealsApi.load(), reviewsUI.load()]);
   renderCounts();
   setCurrency(state.currency, false);
   setCategory(state.category);
