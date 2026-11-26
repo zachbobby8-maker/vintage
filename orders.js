@@ -10,6 +10,20 @@ export function initOrders(ctx) {
 
   const sorted = () => [...state.orders].sort((a, b) => b.createdAt - a.createdAt);
   const lastMessage = (o) => (o.messages || []).filter((m) => m.from !== 'system').slice(-1)[0];
+  const STEPS = ['placed', 'processing', 'shipped', 'delivered'];
+
+  // Tracking timeline: Placed → Packed → Shipped → Delivered (or Cancelled).
+  function renderTimeline(o) {
+    const box = $('#od-timeline');
+    if (o.status === 'cancelled') {
+      box.innerHTML = `<li class="tl-step is-cancelled"><span class="tl-dot" aria-hidden="true"></span><span class="tl-label">${esc(t('track.cancelled'))}</span></li>`;
+      return;
+    }
+    const at = Math.max(0, STEPS.indexOf(o.status));
+    box.innerHTML = STEPS.map((s, i) => `<li class="tl-step ${i < at ? 'is-done' : i === at ? 'is-current' : ''}" ${i === at ? 'aria-current="step"' : ''}>
+      <span class="tl-dot" aria-hidden="true"></span><span class="tl-label">${esc(t('track.' + s))}</span>
+      ${i === 0 ? `<span class="tl-sub">${esc(formatDate(o.createdAt))}</span>` : ''}</li>`).join('');
+  }
 
   function renderList() {
     const orders = sorted();
@@ -18,7 +32,7 @@ export function initOrders(ctx) {
       const last = lastMessage(o);
       const sub = last ? `${last.from === 'buyer' ? t('chat.you') : t('chat.merchant')}: ${last.text}` : t('orders.itemsCount', { n: o.items.reduce((s, i) => s + i.qty, 0) });
       return `<button class="order-row" type="button" data-open-order="${esc(o.id)}">
-        <span class="order-row-main"><span class="order-row-title">${esc(o.id)} · ${esc(fmt(o.totalUsd))}</span>
+        <span class="order-row-main"><span class="order-row-title">${esc(o.id)}, ${esc(fmt(o.totalUsd))}</span>
         <span class="order-row-sub">${esc(sub)}</span></span>
         <span class="order-row-side"><span class="status-chip status-${esc(o.status)}">${esc(t('status.' + o.status))}</span>
         ${o.unreadBuyer ? `<span class="count-badge count-rose" aria-label="${esc(t('orders.unread', { n: o.unreadBuyer }))}">${o.unreadBuyer}</span>` : `<span class="small muted">${esc(formatDate(o.createdAt))}</span>`}</span>
@@ -32,9 +46,11 @@ export function initOrders(ctx) {
     $('#od-id').textContent = t('orders.orderNo', { id: o.id });
     $('#od-date').textContent = formatDate(o.createdAt);
     ctx.statusChip($('#od-status'), o.status);
+    renderTimeline(o);
     const items = $('#od-items');
     items.innerHTML = o.items.map((i) => `<div class="mini-item"><img src="${esc(i.image)}" alt="" />
-      <div class="mini-item-main"><p class="strong">${esc(i.name)}</p><p class="muted">${esc(i.shade || t('cart.oneOfOne'))} · ×${i.qty}</p></div>
+      <div class="mini-item-main"><p class="strong">${esc(i.name)}</p><p class="muted">${esc(i.shade || t('cart.oneOfOne'))}, ×${i.qty}</p>
+      ${o.status === 'delivered' ? `<button class="link-btn small" type="button" data-qv="${esc(i.id)}">${esc(t('rev.write'))}</button>` : ''}</div>
       <span class="strong">${esc(fmt(i.priceUsd * i.qty))}</span></div>`).join('')
       + `<div class="row-between small"><span class="muted">${esc(t('chk.total'))}</span><span class="strong">${esc(fmt(o.totalUsd))}</span></div>`;
     const s = o.shipping || {};
