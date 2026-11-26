@@ -128,7 +128,9 @@ export function initAdmin(ctx) {
       b.classList.toggle('is-active', on);
       b.setAttribute('aria-selected', String(on));
     });
-    ['inbox', 'orders', 'products', 'sellers', 'models', 'shipping', 'contact', 'site', 'overview'].forEach((name) => { const p = $('#admin-tab-' + name); if (p) p.hidden = name !== tab; });
+    ['inbox', 'orders', 'products', 'sellers', 'models', 'shipping', 'contact', 'site', 'deals', 'reviews', 'overview'].forEach((name) => { const p = $('#admin-tab-' + name); if (p) p.hidden = name !== tab; });
+    if (tab === 'deals') ctx.deals?.renderAdmin();
+    if (tab === 'reviews') ctx.reviews?.renderAdmin();
     if (tab === 'site') ctx.siteEditor?.renderAdmin();
     if (tab === 'inbox') ctx.inbox?.renderAdmin();
     if (tab === 'models') ctx.casting?.renderAdmin();
