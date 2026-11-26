@@ -5,10 +5,12 @@ import casting from './partials/casting.js';
 import sellLogin from './partials/sell-login.js';
 import checkout from './partials/checkout.js';
 import stores from './partials/stores.js';
+import quickview from './partials/quickview.js';
+import orders from './partials/orders.js';
 
 const ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
 // Plain strings go before the toast (dialogs); objects can target a page position.
-const PARTIALS = [checkout, sellLogin, productEditor, casting, { html: stores, before: '#casting' }];
+const PARTIALS = [quickview, checkout, orders, sellLogin, productEditor, casting, { html: stores, before: '#casting' }];
 
 export function translate(root, t) {
   const tr = (key) => { const v = t(key); return v && v !== key ? v : null; };
